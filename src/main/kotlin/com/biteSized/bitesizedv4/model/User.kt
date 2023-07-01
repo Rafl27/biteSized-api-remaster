@@ -4,7 +4,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "User")
-data class user(
+data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,

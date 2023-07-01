@@ -2,7 +2,7 @@ package com.biteSized.bitesizedv4.controller
 
 import com.biteSized.bitesizedv4.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.SecurityProperties
+import com.biteSized.bitesizedv4.model.User
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 class UserController(@Autowired private val userRepository: UserRepository) {
 
     @PostMapping
-    fun createUser(@RequestBody newUser: SecurityProperties.User) : ResponseEntity<SecurityProperties.User> {
+    fun createUser(@RequestBody newUser: User) : ResponseEntity<User> {
         val createdUser = userRepository.save(newUser)
         return ResponseEntity(createdUser, HttpStatus.CREATED)
     }
