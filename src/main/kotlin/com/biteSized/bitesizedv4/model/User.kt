@@ -13,8 +13,8 @@ data class User(
     val username: String,
 
     @Column(name = "password")
-    val password: String,
+    var password: String,
 
     @Column(name = "profilePicture")
-    val profilePicture: String,
+    var profilePicture: String?,
 )
