@@ -17,4 +17,7 @@ data class User(
 
     @Column(name = "profilePicture")
     var profilePicture: String?,
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    val stories: List<Story> = mutableListOf()
 )

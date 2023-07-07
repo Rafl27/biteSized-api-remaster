@@ -14,4 +14,8 @@ data class Story(
 
     @Column(name = "content")
     val content: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    val user: User
 )
