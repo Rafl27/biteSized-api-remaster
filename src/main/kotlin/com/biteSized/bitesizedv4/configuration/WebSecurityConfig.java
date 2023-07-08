@@ -16,7 +16,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests( (authorize) -> authorize
                         .requestMatchers("/user").permitAll()
                         .requestMatchers("/user/login").permitAll()
-
+                        .requestMatchers("/story").permitAll()
                 ).csrf().disable();
         return http.build();
     }
