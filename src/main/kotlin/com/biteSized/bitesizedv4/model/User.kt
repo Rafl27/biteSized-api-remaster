@@ -1,5 +1,6 @@
 package com.biteSized.bitesizedv4.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.*
 
 @Entity
@@ -19,5 +20,6 @@ data class User(
     var profilePicture: String = "",
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    @JsonIgnoreProperties("user")
     val stories: List<Story> = mutableListOf()
 )

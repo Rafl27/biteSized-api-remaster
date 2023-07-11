@@ -53,10 +53,8 @@ class UserController(@Autowired private val userRepository: UserRepository, @Aut
             claims["username"] = user.username
             claims["profilePicture"] = user.profilePicture
 
-            // Generate the JWT token
             val token = jwtUtil.generateToken(claims)
 
-            // Return the token in the response
             return ResponseEntity.ok(token)
         } else {
             logger.warning("Failed login attempt for user: $username")

@@ -18,9 +18,6 @@ class JwtUtil {
     private fun getSigningKey(): Key {
         return Keys.hmacShaKeyFor(secretKey.toByteArray())
     }
-//    private val secureKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
-
-
 
     public fun generateToken(claims: Map<String, Any>): String {
         return Jwts.builder()
