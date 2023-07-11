@@ -7,44 +7,32 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.*
+import java.security.Key
 import kotlin.collections.HashMap
 
 @Component
 class JwtUtil {
     @Value("\${jwt.secret}")
-    private lateinit var secret: String
+    private lateinit var secretKey: String
 
-    fun generateToken(username: String): String {
-        val claims: Map<String, Any> = HashMap()
-        val key = Keys.secretKeyFor(SignatureAlgorithm.HS512)
+    private fun getSigningKey(): Key {
+        return Keys.hmacShaKeyFor(secretKey.toByteArray())
+    }
+//    private val secureKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+
+
+
+    public fun generateToken(claims: Map<String, Any>): String {
         return Jwts.builder()
             .setClaims(claims)
-            .setSubject(username)
-            .setIssuedAt(Date())
-            .setExpiration(Date(System.currentTimeMillis() + EXPIRATION_TIME))
-            .signWith(key)
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact()
     }
 
-    fun extractUsername(token: String): String {
-        return extractClaims(token).subject
-    }
-
-    fun validateToken(token: String): Boolean {
-        return try {
-            extractClaims(token)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    private fun extractClaims(token: String): Claims {
-        val key = Keys.secretKeyFor(SignatureAlgorithm.HS512)
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).body
-    }
-
-    companion object {
-        const val EXPIRATION_TIME: Long = 864_000_000 // 10 days
+    fun decodeToken(token: String): Claims {
+        return Jwts.parser()
+            .setSigningKey(getSigningKey())
+            .parseClaimsJws(token)
+            .body
     }
 }

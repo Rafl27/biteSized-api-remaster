@@ -19,13 +19,14 @@ import kotlin.random.Random
 class UserController(@Autowired private val userRepository: UserRepository, @Autowired private val jwtUtil: JwtUtil) {
 
     private val logger: Logger = Logger.getLogger(UserController::class.java.name)
+
     @PostMapping
     fun createUser(@RequestBody newUser: User): ResponseEntity<User> {
         val hashedPassword = BCrypt.hashpw(newUser.password, BCrypt.gensalt())
         newUser.password = hashedPassword
 
         //generate bot avatar
-        if (newUser.profilePicture == null) {
+        if (newUser.profilePicture == "") {
             val randomNumber = Random.nextInt(1, 5001)
             val profilePictureUrl = "https://api.dicebear.com/6.x/bottts/svg?seed=$randomNumber"
             newUser.profilePicture = profilePictureUrl
@@ -36,16 +37,26 @@ class UserController(@Autowired private val userRepository: UserRepository, @Aut
         return ResponseEntity(createdUser, HttpStatus.CREATED)
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<String> {
         val username = loginRequest.username
         val password = loginRequest.password
 
         val user: User = userRepository.findByUsername(username)
 
-        if (user != null && BCrypt.checkpw(password, user.password)) {
-            val token = jwtUtil.generateToken(username)
+        if (BCrypt.checkpw(password, user.password)) {
             logger.info("User logged in: $username")
+
+            // Create claims for the JWT token
+            val claims = HashMap<String, Any>()
+            claims["id"] = user.id
+            claims["username"] = user.username
+            claims["profilePicture"] = user.profilePicture
+
+            // Generate the JWT token
+            val token = jwtUtil.generateToken(claims)
+
+            // Return the token in the response
             return ResponseEntity.ok(token)
         } else {
             logger.warning("Failed login attempt for user: $username")

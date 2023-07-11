@@ -1,6 +1,7 @@
 package com.biteSized.bitesizedv4.controller
 
 import com.biteSized.bitesizedv4.model.Story
+import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,19 +20,21 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
         @RequestBody newStory: Story,
         @RequestHeader("Authorization") authorizationHeader: String
     ): ResponseEntity<Story> {
+        // Extract the token from the authorization header
         val token = authorizationHeader.replace("Bearer ", "")
 
-        if (jwtUtil.validateToken(token)) {
-            val username = jwtUtil.extractUsername(token)
-            // Check if the user exists and perform additional authorization if needed
+        // Decode the JWT token and retrieve the claims
+        val claims = jwtUtil.decodeToken(token)
 
-            val createdStory = storyRepository.save(newStory)
-            logger.info("New story created: ${createdStory.title}")
-            return ResponseEntity(createdStory, HttpStatus.CREATED)
-        } else {
-            // Invalid or missing JWT
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        }
+        // Extract the user information from the claims
+        val userId = claims.get("id", Integer::class.java)
+        val username = claims.get("username", String::class.java)
+        val profilePicture = claims.get("profilePicture", String::class.java)
+        // Set the user information in the new story object
+        newStory.user = User(userId.toLong(), username, profilePicture = profilePicture)
+
+        val createdStory = storyRepository.save(newStory)
+        logger.info("New story created: ${createdStory.title}")
+        return ResponseEntity(createdStory, HttpStatus.CREATED)
     }
-
 }

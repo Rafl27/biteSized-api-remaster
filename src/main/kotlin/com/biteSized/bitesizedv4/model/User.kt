@@ -13,10 +13,10 @@ data class User(
     val username: String,
 
     @Column(name = "password")
-    var password: String,
+    var password: String? = null,
 
     @Column(name = "profilePicture")
-    var profilePicture: String?,
+    var profilePicture: String = "",
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     val stories: List<Story> = mutableListOf()
