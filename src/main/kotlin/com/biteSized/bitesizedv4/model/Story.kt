@@ -10,10 +10,10 @@ import jakarta.persistence.*
         val id: Long,
 
         @Column(name = "title")
-        val title: String,
+        var title: String,
 
         @Column(name = "content")
-        val content: String,
+        var content: String,
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id")

@@ -77,4 +77,21 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
+
+    @PutMapping("/{id}")
+    fun updateStoryById(
+        @PathVariable id: Long,
+        @RequestBody updatedStory: Story
+    ): ResponseEntity<Story> {
+        val existingStory = storyRepository.findById(id)
+        if (existingStory.isPresent) {
+            val story = existingStory.get()
+            story.title = updatedStory.title
+            story.content = updatedStory.content
+            val updatedStoryEntity = storyRepository.save(story)
+            return ResponseEntity(updatedStoryEntity, HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+    }
 }
