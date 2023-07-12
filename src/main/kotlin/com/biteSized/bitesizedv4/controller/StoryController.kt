@@ -63,4 +63,18 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
+
+    //TODO: delete should work only if the tokens userId matches the storyUserId
+    @DeleteMapping("/{id}")
+    fun deleteStoryById(@PathVariable id: Long): ResponseEntity<String> {
+        val story = storyRepository.findById(id)
+        if (story.isPresent) {
+            val deletedStory = story.get()
+            storyRepository.deleteById(id)
+            val responseMessage = "Story with ID $id (${deletedStory.title}) has been deleted."
+            return ResponseEntity(responseMessage, HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+    }
 }
