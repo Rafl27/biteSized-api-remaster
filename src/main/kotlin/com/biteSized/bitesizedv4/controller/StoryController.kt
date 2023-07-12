@@ -1,5 +1,6 @@
 package com.biteSized.bitesizedv4.controller
 
+import com.biteSized.bitesizedv4.DTO.SingleStory
 import com.biteSized.bitesizedv4.DTO.UserStories
 import com.biteSized.bitesizedv4.model.Story
 import com.biteSized.bitesizedv4.model.User
@@ -46,6 +47,18 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
                 UserStories(story.id, story.title, story.content)
             }
             return ResponseEntity(stories, HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+    }
+
+    @GetMapping("/{id}")
+    fun getStoryById(@PathVariable id: Long): ResponseEntity<SingleStory> {
+        val story = storyRepository.findById(id)
+        if (story.isPresent) {
+            val storyEntity = story.get()
+            val storyResponse = SingleStory(storyEntity.id, storyEntity.title, storyEntity.content)
+            return ResponseEntity(storyResponse, HttpStatus.OK)
         } else {
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }
