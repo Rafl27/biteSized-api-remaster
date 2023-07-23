@@ -17,5 +17,9 @@ import jakarta.persistence.*
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id")
-        var user: User? = null
+        var user: User? = null,
+
+        @OneToMany(mappedBy = "story", cascade = [CascadeType.ALL], orphanRemoval = true)
+        var comments: MutableList<Comment> = mutableListOf()
+        
     )
