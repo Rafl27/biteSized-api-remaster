@@ -1,8 +1,9 @@
 package com.biteSized.bitesizedv4.model
 
 import jakarta.persistence.*
+import java.util.*
 
-    @Entity
+@Entity
     @Table(name = "story")
     data class Story(
         @Id
@@ -12,7 +13,7 @@ import jakarta.persistence.*
         @Column(name = "title")
         var title: String,
 
-        @Column(name = "content")
+        @Column(name = "content", length = 5000)
         var content: String,
 
         @ManyToOne(fetch = FetchType.LAZY)
@@ -20,6 +21,18 @@ import jakarta.persistence.*
         var user: User? = null,
 
         @OneToMany(mappedBy = "story", cascade = [CascadeType.ALL], orphanRemoval = true)
-        var comments: MutableList<Comment> = mutableListOf()
-        
+        var comments: MutableList<Comment> = mutableListOf(),
+
+        @Column(name = "date")
+        var date: Date?,
+
+        @Column(name = "upvotes")
+        var upvotes: Int? = 0,
+
+        @Column(name = "downvotes")
+        var downvotes: Int? = 0,
+
+        @Column(name = "art", length = 5000)
+        val art: String = ""
+
     )
