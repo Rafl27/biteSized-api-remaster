@@ -21,6 +21,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/story/{id}").permitAll()
                         .requestMatchers("/story/{id}/comments").permitAll()
                         .requestMatchers("/comment/{parentCommentId}/replies").permitAll()
+                        .requestMatchers("/story/{id}/upvote").permitAll()
+                        .requestMatchers("/story/{id}/downvote").permitAll()
                 ).csrf().disable();
         return http.build();
     }

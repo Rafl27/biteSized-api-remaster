@@ -1,9 +1,6 @@
 package com.biteSized.bitesizedv4.controller
 
-import com.biteSized.bitesizedv4.DTO.CommentRequest
-import com.biteSized.bitesizedv4.DTO.CommentResponse
-import com.biteSized.bitesizedv4.DTO.SingleStory
-import com.biteSized.bitesizedv4.DTO.UserStories
+import com.biteSized.bitesizedv4.DTO.*
 import com.biteSized.bitesizedv4.model.Comment
 import com.biteSized.bitesizedv4.model.Story
 import com.biteSized.bitesizedv4.model.User
@@ -126,6 +123,37 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
             return ResponseEntity.ok(response)
         } else {
             return ResponseEntity.notFound().build()
+        }
+    }
+
+    @PostMapping("/{storyId}/upvote")
+    fun storyUpvote(@PathVariable storyId: Long,
+                    @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UpvoteResponse>{
+        val story = storyRepository.findById(storyId)
+        if (story.isPresent) {
+            val storyEntity = story.get()
+            //?: elvis operator, if upvotes is null it returns 0
+            storyEntity.upvotes = (storyEntity.upvotes ?: 0) + 1
+            storyRepository.save(storyEntity)
+            val upvoteResponse = UpvoteResponse(id = storyId, upvote = storyEntity.upvotes)
+            return ResponseEntity(upvoteResponse, HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+}
+    @PostMapping("/{storyId}/downvote")
+    fun storyDownvote(@PathVariable storyId: Long,
+                    @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
+        val story = storyRepository.findById(storyId)
+        if (story.isPresent) {
+            val storyEntity = story.get()
+            //?: elvis operator, if upvotes is null it returns 0
+            storyEntity.downvotes = (storyEntity.downvotes ?: 0) + 1
+            storyRepository.save(storyEntity)
+            val downVoteResponse = DownvoteResponse(id = storyId, downvote = storyEntity.downvotes)
+            return ResponseEntity(downVoteResponse, HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
 }
