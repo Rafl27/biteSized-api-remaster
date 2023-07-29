@@ -7,10 +7,13 @@ import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.repository.UserRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
+import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.Authorization
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 import java.util.*
 import java.util.logging.Logger
 
@@ -142,6 +145,7 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
         }
 }
     @PostMapping("/{storyId}/downvote")
+    @ApiOperation(value = "downvote stories")
     fun storyDownvote(@PathVariable storyId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
         val story = storyRepository.findById(storyId)
@@ -156,4 +160,33 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
+
+    @GetMapping("/{storyId}/completestory")
+    @ApiOperation(value = "returns a story and all its comments")
+    fun completeStory(@PathVariable storyId: Long): ResponseEntity<List<CompleteStoryResponse>> {
+        val story = storyRepository.findById(storyId)
+        if (story.isPresent) {
+            val queryResult = storyRepository.getCompleteStoryAndComments(storyId)
+            val response = queryResult.map { result ->
+                CompleteStoryResponse(
+                    result[0] as? String ?: "",        // Provide default value if null
+                    result[1] as? String ?: "",
+                    result[2] as? String ?: "",
+                    result[3] as? LocalDate ?: LocalDate.MIN, // Provide default value if null
+                    result[4] as? Int ?: 0,            // Provide default value if null
+                    result[5] as? Int ?: 0,
+                    result[6] as? String ?: "",
+                    result[7] as? String ?: "",
+                    result[8] as? LocalDate ?: LocalDate.MIN, // Provide default value if null
+                    result[9] as? Int ?: 0,            // Provide default value if null
+                    result[10] as? Int ?: 0
+                )
+            }
+            return ResponseEntity.ok(response)
+        } else {
+            return ResponseEntity.notFound().build()
+        }
+    }
+
+
 }
