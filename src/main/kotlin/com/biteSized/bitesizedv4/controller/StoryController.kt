@@ -161,32 +161,7 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
         }
     }
 
-    @GetMapping("/{storyId}/completestory")
-    @ApiOperation(value = "returns a story and all its comments")
-    fun completeStory(@PathVariable storyId: Long): ResponseEntity<List<CompleteStoryResponse>> {
-        val story = storyRepository.findById(storyId)
-        if (story.isPresent) {
-            val queryResult = storyRepository.getCompleteStoryAndComments(storyId)
-            val response = queryResult.map { result ->
-                CompleteStoryResponse(
-                    result[0] as? String ?: "",        // Provide default value if null
-                    result[1] as? String ?: "",
-                    result[2] as? String ?: "",
-                    result[3] as? LocalDate ?: LocalDate.MIN, // Provide default value if null
-                    result[4] as? Int ?: 0,            // Provide default value if null
-                    result[5] as? Int ?: 0,
-                    result[6] as? String ?: "",
-                    result[7] as? String ?: "",
-                    result[8] as? LocalDate ?: LocalDate.MIN, // Provide default value if null
-                    result[9] as? Int ?: 0,            // Provide default value if null
-                    result[10] as? Int ?: 0
-                )
-            }
-            return ResponseEntity.ok(response)
-        } else {
-            return ResponseEntity.notFound().build()
-        }
-    }
+
 
 
 }
