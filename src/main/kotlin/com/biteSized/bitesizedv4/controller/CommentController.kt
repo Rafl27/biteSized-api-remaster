@@ -30,13 +30,14 @@ class CommentController(@Autowired private val storyRepository: StoryRepository,
         val userId = claims.get("id", Integer::class.java)
         val username = claims.get("username", String::class.java)
         val profilePicture = claims.get("profilePicture", String::class.java)
+        val email = claims.get("email", String::class.java)
         if (parentCommentOptional.isPresent) {
             val parentComment = parentCommentOptional.get()
             val replyComment = Comment(
                 id = 0,
                 content = replyRequest.content,
                 story = parentComment.story,
-                user = User(userId.toLong(), username, profilePicture = profilePicture),
+                user = User(userId.toLong(), username, profilePicture = profilePicture, email = email),
                 parent = parentComment,
                 art = replyRequest.art,
                 date = Date(),
@@ -84,13 +85,14 @@ class CommentController(@Autowired private val storyRepository: StoryRepository,
         val userId = claims.get("id", Integer::class.java)
         val username = claims.get("username", String::class.java)
         val profilePicture = claims.get("profilePicture", String::class.java)
+        val email = claims.get("email", String::class.java)
         if (storyOptional.isPresent) {
             val story = storyOptional.get()
             val comment = Comment(
                 id = 0,
                 content = commentRequest.content,
                 story = story,
-                user = User(userId.toLong(), username, profilePicture = profilePicture),
+                user = User(userId.toLong(), username, profilePicture = profilePicture, email = email),
                 date = Date(),
                 art = commentRequest.art,
                 parent = null

@@ -39,13 +39,13 @@ class UserController(@Autowired private val userRepository: UserRepository, @Aut
 
     @PostMapping("/login")
     fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<String> {
-        val username = loginRequest.username
+        val email = loginRequest.email
         val password = loginRequest.password
 
-        val user: User = userRepository.findByUsername(username)
+        val user: User = userRepository.findByEmail(email)
 
         if (BCrypt.checkpw(password, user.password)) {
-            logger.info("User logged in: $username")
+            logger.info("User logged in: $email")
 
             // Create claims for the JWT token
             val claims = HashMap<String, Any>()
@@ -57,8 +57,8 @@ class UserController(@Autowired private val userRepository: UserRepository, @Aut
 
             return ResponseEntity.ok(token)
         } else {
-            logger.warning("Failed login attempt for user: $username")
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.")
+            logger.warning("Failed login attempt for user: $email")
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.")
         }
     }
 }
