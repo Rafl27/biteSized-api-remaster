@@ -99,36 +99,6 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
         }
     }
 
-    @PostMapping("/{storyId}/comments")
-    fun createComment(@PathVariable storyId: Long,
-                      @RequestBody commentRequest: CommentRequest,
-                      @RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<CommentResponse> {
-        val storyOptional = storyRepository.findById(storyId)
-        val token = authorizationHeader.replace("Bearer ", "")
-        val claims = jwtUtil.decodeToken(token)
-        val userId = claims.get("id", Integer::class.java)
-        val username = claims.get("username", String::class.java)
-        val profilePicture = claims.get("profilePicture", String::class.java)
-        if (storyOptional.isPresent) {
-            val story = storyOptional.get()
-            val comment = Comment(
-                id = 0,
-                content = commentRequest.content,
-                story = story,
-                user = User(userId.toLong(), username, profilePicture = profilePicture),
-                date = Date(),
-                art = commentRequest.art,
-                parent = null
-            )
-            story.comments.add(comment)
-            val savedComment = storyRepository.save(story).comments.last()
-            val response = CommentResponse(savedComment.id, savedComment.content, savedComment.user.username)
-            return ResponseEntity.ok(response)
-        } else {
-            return ResponseEntity.notFound().build()
-        }
-    }
-
     @PostMapping("/{storyId}/upvote")
     fun storyUpvote(@PathVariable storyId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UpvoteResponse>{
@@ -160,8 +130,4 @@ class StoryController(@Autowired private val storyRepository: StoryRepository, @
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
-
-
-
-
 }

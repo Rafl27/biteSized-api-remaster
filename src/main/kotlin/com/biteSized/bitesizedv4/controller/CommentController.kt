@@ -1,9 +1,6 @@
 package com.biteSized.bitesizedv4.controller
 
-import com.biteSized.bitesizedv4.DTO.CommentReplyRequest
-import com.biteSized.bitesizedv4.DTO.CommentResponse
-import com.biteSized.bitesizedv4.DTO.CompleteStoryResponse
-import com.biteSized.bitesizedv4.DTO.StoryCommentsResponse
+import com.biteSized.bitesizedv4.DTO.*
 import com.biteSized.bitesizedv4.model.Comment
 import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.CommentRepository
@@ -11,6 +8,7 @@ import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.sql.Timestamp
@@ -73,6 +71,67 @@ class CommentController(@Autowired private val storyRepository: StoryRepository,
             return ResponseEntity.ok(response)
         } else {
             return ResponseEntity.notFound().build()
+        }
+    }
+
+    @PostMapping("/{storyId}")
+    fun createComment(@PathVariable storyId: Long,
+                      @RequestBody commentRequest: CommentRequest,
+                      @RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<CommentResponse> {
+        val storyOptional = storyRepository.findById(storyId)
+        val token = authorizationHeader.replace("Bearer ", "")
+        val claims = jwtUtil.decodeToken(token)
+        val userId = claims.get("id", Integer::class.java)
+        val username = claims.get("username", String::class.java)
+        val profilePicture = claims.get("profilePicture", String::class.java)
+        if (storyOptional.isPresent) {
+            val story = storyOptional.get()
+            val comment = Comment(
+                id = 0,
+                content = commentRequest.content,
+                story = story,
+                user = User(userId.toLong(), username, profilePicture = profilePicture),
+                date = Date(),
+                art = commentRequest.art,
+                parent = null
+            )
+            story.comments.add(comment)
+            val savedComment = storyRepository.save(story).comments.last()
+            val response = CommentResponse(savedComment.id, savedComment.content, savedComment.user.username)
+            return ResponseEntity.ok(response)
+        } else {
+            return ResponseEntity.notFound().build()
+        }
+    }
+
+    @PostMapping("/{commentId}/upvote")
+    fun commentUpvote(@PathVariable commentId: Long,
+                    @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UpvoteResponse>{
+        val comment = commentRepository.findById(commentId)
+        if (comment.isPresent) {
+            val commentEntity = comment.get()
+            //?: elvis operator, if upvotes is null it returns 0
+            commentEntity.upvotes = (commentEntity.upvotes ?: 0) + 1
+            commentRepository.save(commentEntity)
+            val upvoteResponse = UpvoteResponse(id = commentId, upvote = commentEntity.upvotes)
+            return ResponseEntity(upvoteResponse, HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+    }
+    @PostMapping("/{commentId}/downvote")
+    @ApiOperation(value = "downvote stories")
+    fun commentDownvote(@PathVariable commentId: Long,
+                      @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
+        val comment = commentRepository.findById(commentId)
+        if (comment.isPresent) {
+            val commentEntity = comment.get()
+            commentEntity.downvotes = (commentEntity.downvotes ?: 0) + 1
+            commentRepository.save(commentEntity)
+            val downVoteResponse = DownvoteResponse(id = commentId, downvote = commentEntity.downvotes)
+            return ResponseEntity(downVoteResponse, HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
 }
