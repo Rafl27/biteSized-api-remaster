@@ -6,6 +6,7 @@ import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.CommentRepository
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
+import com.biteSized.bitesizedv4.service.CommentService
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -17,7 +18,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/comment")
-class CommentController(@Autowired private val storyRepository: StoryRepository, @Autowired private val commentRepository: CommentRepository, @Autowired private val jwtUtil: JwtUtil) {
+class CommentController(private val commentService: CommentService, @Autowired private val storyRepository: StoryRepository, @Autowired private val commentRepository: CommentRepository, @Autowired private val jwtUtil: JwtUtil) {
     @PostMapping("/{parentCommentId}/replies")
     fun createReply(
         @RequestHeader("Authorization") authorizationHeader: String,
@@ -125,15 +126,7 @@ class CommentController(@Autowired private val storyRepository: StoryRepository,
     @ApiOperation(value = "downvote stories")
     fun commentDownvote(@PathVariable commentId: Long,
                       @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
-        val comment = commentRepository.findById(commentId)
-        if (comment.isPresent) {
-            val commentEntity = comment.get()
-            commentEntity.downvotes = (commentEntity.downvotes ?: 0) + 1
-            commentRepository.save(commentEntity)
-            val downVoteResponse = DownvoteResponse(id = commentId, downvote = commentEntity.downvotes)
-            return ResponseEntity(downVoteResponse, HttpStatus.OK)
-        } else {
-            return ResponseEntity(HttpStatus.NOT_FOUND)
-        }
+        val downVoteResponse = commentService.commentDownvote(commentId)
+        return ResponseEntity(downVoteResponse, HttpStatus.OK)
     }
 }
