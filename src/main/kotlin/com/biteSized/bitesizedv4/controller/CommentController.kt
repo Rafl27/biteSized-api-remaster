@@ -80,31 +80,7 @@ class CommentController(private val commentService: CommentService, @Autowired p
     fun createComment(@PathVariable storyId: Long,
                       @RequestBody commentRequest: CommentRequest,
                       @RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<CommentResponse> {
-        val storyOptional = storyRepository.findById(storyId)
-        val token = authorizationHeader.replace("Bearer ", "")
-        val claims = jwtUtil.decodeToken(token)
-        val userId = claims.get("id", Integer::class.java)
-        val username = claims.get("username", String::class.java)
-        val profilePicture = claims.get("profilePicture", String::class.java)
-        val email = claims.get("email", String::class.java)
-        if (storyOptional.isPresent) {
-            val story = storyOptional.get()
-            val comment = Comment(
-                id = 0,
-                content = commentRequest.content,
-                story = story,
-                user = User(userId.toLong(), username, profilePicture = profilePicture, email = email),
-                date = Date(),
-                art = commentRequest.art,
-                parent = null
-            )
-            story.comments.add(comment)
-            val savedComment = storyRepository.save(story).comments.last()
-            val response = CommentResponse(savedComment.id, savedComment.content, savedComment.user.username)
-            return ResponseEntity.ok(response)
-        } else {
-            return ResponseEntity.notFound().build()
-        }
+        return commentService.createComment(storyId, commentRequest, authorizationHeader)
     }
 
     @PostMapping("/{commentId}/upvote")
