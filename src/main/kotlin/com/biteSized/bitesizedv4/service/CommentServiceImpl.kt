@@ -1,9 +1,6 @@
 package com.biteSized.bitesizedv4.service
 
-import com.biteSized.bitesizedv4.DTO.CommentRequest
-import com.biteSized.bitesizedv4.DTO.CommentResponse
-import com.biteSized.bitesizedv4.DTO.DownvoteResponse
-import com.biteSized.bitesizedv4.DTO.UpvoteResponse
+import com.biteSized.bitesizedv4.DTO.*
 import com.biteSized.bitesizedv4.exception.NotFoundException
 import com.biteSized.bitesizedv4.model.Comment
 import com.biteSized.bitesizedv4.model.User
@@ -11,6 +8,7 @@ import com.biteSized.bitesizedv4.repository.CommentRepository
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 import java.util.*
 
 @Service
@@ -59,6 +57,29 @@ class CommentServiceImpl(
             story.comments.add(comment)
             val savedComment = storyRepository.save(story).comments.last()
             val response = CommentResponse(savedComment.id, savedComment.content, savedComment.user.username)
+            return ResponseEntity.ok(response)
+        } else {
+            return ResponseEntity.notFound().build()
+        }
+    }
+
+    override fun storyComments(storyId: Long): ResponseEntity<List<StoryCommentsResponse>> {
+        val story = storyRepository.findById(storyId)
+        if (story.isPresent) {
+            val queryResult = storyRepository.getStoryComments(storyId)
+            val response = queryResult.map { result ->
+                StoryCommentsResponse(
+                    result[0] as Long,
+                    result[1] as Long,
+                    result[2] as String,
+                    result[3] as? String ?: "",
+                    result[4] as Long?,
+                    result[5] as Timestamp,
+                    result[6] as Int,
+                    result[7] as Int,
+                    result[8] as Long,
+                )
+            }
             return ResponseEntity.ok(response)
         } else {
             return ResponseEntity.notFound().build()

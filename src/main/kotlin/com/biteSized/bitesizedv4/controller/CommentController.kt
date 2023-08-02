@@ -54,26 +54,7 @@ class CommentController(private val commentService: CommentService, @Autowired p
     @GetMapping("/{storyId}/allcomments")
     @ApiOperation(value = "Returns storyId and all its comments/replies")
     fun storyComments(@PathVariable storyId: Long): ResponseEntity<List<StoryCommentsResponse>> {
-        val story = storyRepository.findById(storyId)
-        if (story.isPresent) {
-            val queryResult = storyRepository.getStoryComments(storyId)
-            val response = queryResult.map { result ->
-                StoryCommentsResponse(
-                    result[0] as Long,
-                    result[1] as Long,
-                    result[2] as String,
-                    result[3] as? String ?: "",
-                    result[4] as Long?,
-                    result[5] as Timestamp,
-                    result[6] as Int,
-                    result[7] as Int,
-                    result[8] as Long,
-                )
-            }
-            return ResponseEntity.ok(response)
-        } else {
-            return ResponseEntity.notFound().build()
-        }
+        return commentService.storyComments(storyId)
     }
 
     @PostMapping("/{storyId}")
