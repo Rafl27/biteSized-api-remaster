@@ -85,4 +85,25 @@ class CommentServiceImpl(
             return ResponseEntity.notFound().build()
         }
     }
+
+    override fun createReply(parentCommentId: Long, replyRequest: CommentReplyRequest, authorization: String) : ResponseEntity<CommentResponse> {
+        val parentCommentOptional = commentRepository.findById(parentCommentId)
+        if (parentCommentOptional.isPresent) {
+            val parentComment = parentCommentOptional.get()
+            val replyComment = Comment(
+                id = 0,
+                content = replyRequest.content,
+                story = parentComment.story,
+                user = tokenService.getUserTokenClaims(authorization),
+                parent = parentComment,
+                art = replyRequest.art,
+                date = Date(),
+            )
+            val savedReplyComment = commentRepository.save(replyComment)
+            val response = CommentResponse(savedReplyComment.id, savedReplyComment.content, savedReplyComment.user.username)
+            return ResponseEntity.ok(response)
+        } else {
+            return ResponseEntity.notFound().build()
+        }
+    }
 }

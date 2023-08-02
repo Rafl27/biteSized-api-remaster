@@ -25,30 +25,7 @@ class CommentController(private val commentService: CommentService, @Autowired p
         @PathVariable parentCommentId: Long,
         @RequestBody replyRequest: CommentReplyRequest
     ): ResponseEntity<CommentResponse> {
-        val parentCommentOptional = commentRepository.findById(parentCommentId)
-        val token = authorizationHeader.replace("Bearer ", "")
-        val claims = jwtUtil.decodeToken(token)
-        val userId = claims.get("id", Integer::class.java)
-        val username = claims.get("username", String::class.java)
-        val profilePicture = claims.get("profilePicture", String::class.java)
-        val email = claims.get("email", String::class.java)
-        if (parentCommentOptional.isPresent) {
-            val parentComment = parentCommentOptional.get()
-            val replyComment = Comment(
-                id = 0,
-                content = replyRequest.content,
-                story = parentComment.story,
-                user = User(userId.toLong(), username, profilePicture = profilePicture, email = email),
-                parent = parentComment,
-                art = replyRequest.art,
-                date = Date(),
-            )
-            val savedReplyComment = commentRepository.save(replyComment)
-            val response = CommentResponse(savedReplyComment.id, savedReplyComment.content, savedReplyComment.user.username)
-            return ResponseEntity.ok(response)
-        } else {
-            return ResponseEntity.notFound().build()
-        }
+        return commentService.createReply(parentCommentId, replyRequest, authorizationHeader)
     }
 
     @GetMapping("/{storyId}/allcomments")
