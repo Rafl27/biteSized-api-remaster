@@ -110,17 +110,8 @@ class CommentController(private val commentService: CommentService, @Autowired p
     @PostMapping("/{commentId}/upvote")
     fun commentUpvote(@PathVariable commentId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UpvoteResponse>{
-        val comment = commentRepository.findById(commentId)
-        if (comment.isPresent) {
-            val commentEntity = comment.get()
-            //?: elvis operator, if upvotes is null it returns 0
-            commentEntity.upvotes = (commentEntity.upvotes ?: 0) + 1
-            commentRepository.save(commentEntity)
-            val upvoteResponse = UpvoteResponse(id = commentId, upvote = commentEntity.upvotes)
-            return ResponseEntity(upvoteResponse, HttpStatus.OK)
-        } else {
-            return ResponseEntity(HttpStatus.NOT_FOUND)
-        }
+        val upvoteResponse = commentService.commentUpvote(commentId)
+        return ResponseEntity(upvoteResponse, HttpStatus.OK)
     }
     @PostMapping("/{commentId}/downvote")
     @ApiOperation(value = "downvote stories")
