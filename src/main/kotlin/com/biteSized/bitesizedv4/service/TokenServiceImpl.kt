@@ -18,4 +18,10 @@ class TokenServiceImpl (@Autowired private val jwtUtil: JwtUtil, private val rep
         return User(userId.toLong(), username, profilePicture, email)
     }
 
+    override fun getUserId(authorizationHeader: String): Int {
+        val token = replace.bearer(authorizationHeader)
+        val claims = jwtUtil.decodeToken(token)
+        return claims.get("id", Integer::class.java).toInt()
+    }
+
 }
