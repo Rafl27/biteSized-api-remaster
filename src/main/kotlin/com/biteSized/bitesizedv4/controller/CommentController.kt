@@ -18,6 +18,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/comment")
+@CrossOrigin(origins = arrayOf("http://localhost:5173"))
 class CommentController(private val commentService: CommentService, @Autowired private val storyRepository: StoryRepository, @Autowired private val commentRepository: CommentRepository, @Autowired private val jwtUtil: JwtUtil) {
     @PostMapping("/{parentCommentId}/replies")
     fun createReply(

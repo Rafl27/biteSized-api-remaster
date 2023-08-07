@@ -16,11 +16,13 @@ import kotlin.random.Random
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = arrayOf("http://localhost:5173"))
 class UserController(@Autowired private val userRepository: UserRepository, @Autowired private val jwtUtil: JwtUtil) {
 
     private val logger: Logger = Logger.getLogger(UserController::class.java.name)
 
     @PostMapping
+    @RequestMapping("/signup")
     fun createUser(@RequestBody newUser: User): ResponseEntity<User> {
         val hashedPassword = BCrypt.hashpw(newUser.password, BCrypt.gensalt())
         newUser.password = hashedPassword

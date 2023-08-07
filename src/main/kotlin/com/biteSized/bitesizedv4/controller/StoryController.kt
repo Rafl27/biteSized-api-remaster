@@ -20,6 +20,7 @@ import java.util.logging.Logger
 
 @RestController
 @RequestMapping("/story")
+@CrossOrigin(origins = arrayOf("http://localhost:5173"))
 class StoryController(private val storyService : StoryService, @Autowired private val storyRepository: StoryRepository, @Autowired private val jwtUtil: JwtUtil, @Autowired private val userRepository: UserRepository) {
 
     private val logger: Logger = Logger.getLogger(StoryController::class.java.name)
