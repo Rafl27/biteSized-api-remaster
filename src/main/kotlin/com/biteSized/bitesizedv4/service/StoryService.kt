@@ -1,9 +1,6 @@
 package com.biteSized.bitesizedv4.service
 
-import com.biteSized.bitesizedv4.DTO.DownvoteResponse
-import com.biteSized.bitesizedv4.DTO.SingleStory
-import com.biteSized.bitesizedv4.DTO.UpvoteResponse
-import com.biteSized.bitesizedv4.DTO.UserStories
+import com.biteSized.bitesizedv4.DTO.*
 import com.biteSized.bitesizedv4.model.Story
 import org.springframework.http.ResponseEntity
 
@@ -15,4 +12,5 @@ interface StoryService {
     fun updateStoryById (id: Long, updatedStory : Story) : ResponseEntity<Story>
     fun storyUpvote(storyId: Long, authorization: String) : ResponseEntity<UpvoteResponse>
     fun storyDownvote(storyId: Long, authorization: String) : ResponseEntity<DownvoteResponse>
+    fun allStories() : ResponseEntity<List<CompleteStoryNoComments>>
 }

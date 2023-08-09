@@ -1,9 +1,6 @@
 package com.biteSized.bitesizedv4.service
 
-import com.biteSized.bitesizedv4.DTO.DownvoteResponse
-import com.biteSized.bitesizedv4.DTO.SingleStory
-import com.biteSized.bitesizedv4.DTO.UpvoteResponse
-import com.biteSized.bitesizedv4.DTO.UserStories
+import com.biteSized.bitesizedv4.DTO.*
 import com.biteSized.bitesizedv4.controller.StoryController
 import com.biteSized.bitesizedv4.model.Story
 import com.biteSized.bitesizedv4.repository.StoryRepository
@@ -105,4 +102,22 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
-}
+
+    override fun allStories(): ResponseEntity<List<CompleteStoryNoComments>> {
+            val queryResult = storyRepository.getStoryAndUserNoComment()
+            val storyAndUserNoCommentDTO = queryResult.map { story ->
+                CompleteStoryNoComments(
+                    story[0] as String,
+                    story[1] as String,
+                    story[2] as String,
+                    story[3] as Date,
+                    story[4] as Int,
+                    story[5] as Int,
+                    story[6] as String,
+                    story[7] as String,
+                    story[8] as Long,
+                )
+            }
+            return ResponseEntity.ok(storyAndUserNoCommentDTO)
+        }
+    }
