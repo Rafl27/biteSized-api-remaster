@@ -67,4 +67,10 @@ class StoryController(private val storyService : StoryService, @Autowired privat
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
         return storyService.storyDownvote(storyId, authorizationHeader)
     }
+
+    @GetMapping("/all")
+    @ApiOperation(value = "Gets all the stories (no comments)")
+    fun allStories(): ResponseEntity<List<CompleteStoryNoComments>> {
+        return storyService.allStories()
+    }
 }
