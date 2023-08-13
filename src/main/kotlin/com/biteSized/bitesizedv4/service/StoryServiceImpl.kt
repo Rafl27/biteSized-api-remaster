@@ -29,7 +29,7 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         val user = userRepository.findById(tokenService.getUserId(authorization).toLong())
         if (user.isPresent) {
             val stories = user.get().stories.map { story ->
-                UserStories(story.id, story.title, story.content)
+                UserStories(story.id, story.title, story.content, story.upvotes, story.downvotes, story.art)
             }
             return ResponseEntity(stories, HttpStatus.OK)
         } else {
@@ -43,7 +43,7 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         val story = storyRepository.findById(id)
         if (story.isPresent) {
             val storyEntity = story.get()
-            val storyResponse = SingleStory(storyEntity.id, storyEntity.title, storyEntity.content)
+            val storyResponse = SingleStory(storyEntity.id, storyEntity.title, storyEntity.content, storyEntity.date, storyEntity.upvotes, storyEntity.downvotes, storyEntity.art)
             return ResponseEntity(storyResponse, HttpStatus.OK)
         } else {
             return ResponseEntity(HttpStatus.NOT_FOUND)
