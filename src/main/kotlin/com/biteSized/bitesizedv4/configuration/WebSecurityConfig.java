@@ -16,6 +16,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests( (authorize) -> authorize
                         .requestMatchers("/user").permitAll()
                         .requestMatchers("/user/signup").permitAll()
+                        .requestMatchers("/user/info").permitAll()
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/story").permitAll()
                         .requestMatchers("/story/all").permitAll()
