@@ -1,6 +1,7 @@
 package com.biteSized.bitesizedv4.service
 
 import com.biteSized.bitesizedv4.DTO.LoginRequest
+import com.biteSized.bitesizedv4.DTO.UserBasicInfo
 import com.biteSized.bitesizedv4.controller.UserController
 import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.UserRepository
@@ -15,7 +16,8 @@ import kotlin.random.Random
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
-    private val jwtUtil: JwtUtil
+    private val jwtUtil: JwtUtil,
+    private val tokenService: TokenService
 ) : UserService {
     private val logger: Logger = Logger.getLogger(UserController::class.java.name)
     override fun createUser(newUser: User): ResponseEntity<User> {
@@ -58,4 +60,23 @@ class UserServiceImpl(
         }
     }
 
+    override fun userInfo(authorizationHeader: String): ResponseEntity<UserBasicInfo> {
+        val userId = tokenService.getUserId(authorizationHeader)
+        val queryResult = userRepository.getUserBasicInfoById(userId.toLong())
+
+        if (queryResult.isNotEmpty()) {
+            val resultString = queryResult[0]
+            val parts = resultString.split(",")
+
+            if (parts.size == 3) {
+                val username = parts[0]
+                val email = parts[1]
+                val profilePicture = parts[2]
+                val userBasicInfo = UserBasicInfo(username, email, profilePicture)
+                return ResponseEntity.ok(userBasicInfo)
+            }
+        }
+
+        return ResponseEntity.notFound().build()
+    }
 }
