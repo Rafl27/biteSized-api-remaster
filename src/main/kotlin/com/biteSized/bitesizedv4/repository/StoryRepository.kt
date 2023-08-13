@@ -13,8 +13,9 @@ interface StoryRepository :JpaRepository<Story, Long> {
             "FROM story JOIN comment ON story.id = comment.story_id WHERE story.id = :storyId ORDER BY comment.upvotes DESC", nativeQuery = true)
     fun getStoryComments(@Param("storyId") storyId: Long): List<Array<Any>>
 
-    @Query("SELECT profile_picture, username, art, date, downvotes, upvotes, title, content, story.id as storyId from bitesized.user\n" +
-            "join story on story.user_id = user.id;", nativeQuery = true)
+    @Query("SELECT profile_picture, username, art, date, downvotes, upvotes, title, content, story.id as storyId FROM bitesized.user\n" +
+            "JOIN story ON story.user_id = user.id\n" +
+            "ORDER BY upvotes DESC", nativeQuery = true)
     fun getStoryAndUserNoComment() : List<Array<Any>>
 
 }
