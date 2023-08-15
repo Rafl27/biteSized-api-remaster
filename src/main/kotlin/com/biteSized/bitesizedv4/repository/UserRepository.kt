@@ -12,4 +12,8 @@ interface UserRepository : JpaRepository<User, Long> {
     fun findByEmail(email: String) : User
     @Query("SELECT u.username, u.email, u.profilePicture FROM User u WHERE u.id = :userId")
     fun getUserBasicInfoById(userId: Long): Array<String>
+    @Query("SELECT user_id, profile_picture, username, email from story\n" +
+            "join user on story.user_id = user.id\n" +
+            "where story.id = :storyId", nativeQuery = true)
+    fun getUserBasicInfoByStoryId(storyId: Int): Array<String>
 }
