@@ -9,4 +9,5 @@ interface UserService {
     fun createUser(newUser : User) : ResponseEntity<User>
     fun login(loginRequest : LoginRequest) : ResponseEntity<String>
     fun userInfo(authorizationHeader : String) : ResponseEntity<UserBasicInfo>
+    fun userInfoBasedOnStoryId(storyId: Int) : ResponseEntity<UserBasicInfo>
 }
