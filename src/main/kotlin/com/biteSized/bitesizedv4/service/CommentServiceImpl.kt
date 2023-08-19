@@ -78,6 +78,9 @@ class CommentServiceImpl(
                     result[6] as Int,
                     result[7] as Int,
                     result[8] as Long,
+                    result[9] as String,
+                    result[10] as String,
+                    result[11] as? String ?: ""
                 )
             }
             return ResponseEntity.ok(response)
