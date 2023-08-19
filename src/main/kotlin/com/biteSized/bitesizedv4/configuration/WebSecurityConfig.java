@@ -18,6 +18,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/user/signup").permitAll()
                         .requestMatchers("/user/info").permitAll()
                         .requestMatchers("/user/info/story/{storyId}").permitAll()
+                        .requestMatchers("/user/info/comment/{commentId}").permitAll()
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/story").permitAll()
                         .requestMatchers("/story/all").permitAll()
