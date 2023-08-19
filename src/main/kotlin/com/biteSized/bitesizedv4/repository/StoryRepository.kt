@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param
 interface StoryRepository :JpaRepository<Story, Long> {
     @Query("SELECT story.id as idStory, comment.id as idComment, comment.content as contentComment," +
             "comment.art as artComment, comment.parent_id as parentCommentId, comment.date as dateComment," +
-            "comment.downvotes as downvotesComment, comment.upvotes as upvotesCommment, comment.user_id as useridComment " +
-            "FROM story JOIN comment ON story.id = comment.story_id WHERE story.id = :storyId ORDER BY comment.upvotes DESC", nativeQuery = true)
+            "comment.downvotes as downvotesComment, comment.upvotes as upvotesCommment, comment.user_id as useridComment, profile_picture as userProfilePic, username as userUsername, email as userEmail " +
+            "FROM story JOIN comment ON story.id = comment.story_id JOIN user ON comment.user_id = user.id WHERE story.id = :storyId ORDER BY comment.upvotes DESC", nativeQuery = true)
     fun getStoryComments(@Param("storyId") storyId: Long): List<Array<Any>>
 
     @Query("SELECT profile_picture, username, art, date, downvotes, upvotes, title, content, story.id as storyId FROM bitesized.user\n" +
