@@ -92,4 +92,13 @@ class UserServiceImpl(
         return ResponseEntity.notFound().build()
     }
 
+    override fun userInfoBasedOnCommentId(userId: Int): ResponseEntity<UserBasicInfo> {
+        val queryResult = userRepository.getUserBasicInfoByCommentId(userId)
+
+        if (queryResult.isNotEmpty()) {
+            return ResponseEntity.ok(stringArrayIntoDTO.userBasicInfo(queryResult))
+        }
+        return ResponseEntity.notFound().build()
+    }
+
 }

@@ -32,4 +32,8 @@ class UserController(@Autowired private val userRepository: UserRepository, @Aut
     fun userInfoBasedOnStoryId(@PathVariable storyId: Int): ResponseEntity<UserBasicInfo>{
         return userService.userInfoBasedOnStoryId(storyId)
     }
+    @GetMapping("/info/comment/{userId}")
+    fun userInfoBasedOnCommentId(@PathVariable userId: Int) : ResponseEntity<UserBasicInfo>{
+        return userService.userInfoBasedOnCommentId(userId)
+    }
 }

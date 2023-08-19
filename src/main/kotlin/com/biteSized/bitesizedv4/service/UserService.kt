@@ -10,4 +10,5 @@ interface UserService {
     fun login(loginRequest : LoginRequest) : ResponseEntity<String>
     fun userInfo(authorizationHeader : String) : ResponseEntity<UserBasicInfo>
     fun userInfoBasedOnStoryId(storyId: Int) : ResponseEntity<UserBasicInfo>
+    fun userInfoBasedOnCommentId(userId: Int) : ResponseEntity<UserBasicInfo>
 }
