@@ -42,13 +42,13 @@ class CommentController(private val commentService: CommentService, @Autowired p
         return commentService.createComment(storyId, commentRequest, authorizationHeader)
     }
 
-    @PostMapping("/{commentId}/upvote")
+    @PutMapping("/{commentId}/upvote")
     fun commentUpvote(@PathVariable commentId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UpvoteResponse>{
         val upvoteResponse = commentService.commentUpvote(commentId)
         return ResponseEntity(upvoteResponse, HttpStatus.OK)
     }
-    @PostMapping("/{commentId}/downvote")
+    @PutMapping("/{commentId}/downvote")
     @ApiOperation(value = "downvote stories")
     fun commentDownvote(@PathVariable commentId: Long,
                       @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
