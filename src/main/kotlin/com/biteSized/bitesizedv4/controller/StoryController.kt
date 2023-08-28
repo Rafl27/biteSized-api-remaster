@@ -56,12 +56,12 @@ class StoryController(private val storyService : StoryService, @Autowired privat
        return storyService.updateStoryById(id, updatedStory)
     }
 
-    @PostMapping("/{storyId}/upvote")
+    @PutMapping("/{storyId}/upvote")
     fun storyUpvote(@PathVariable storyId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UpvoteResponse>{
         return storyService.storyUpvote(storyId, authorizationHeader)
 }
-    @PostMapping("/{storyId}/downvote")
+    @PutMapping("/{storyId}/downvote")
     @ApiOperation(value = "downvote stories")
     fun storyDownvote(@PathVariable storyId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
