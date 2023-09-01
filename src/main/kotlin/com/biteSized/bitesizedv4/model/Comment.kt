@@ -35,6 +35,9 @@ data class Comment(
     var downvotes: Int? = 0,
 
     @Column(name = "art", length = 5000)
-    val art: String? = ""
+    val art: String? = "",
+
+    @OneToMany(mappedBy = "comment", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var votes: MutableList<CommentVote> = mutableListOf()
 )
 
