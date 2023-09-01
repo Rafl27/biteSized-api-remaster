@@ -7,6 +7,7 @@ import com.biteSized.bitesizedv4.repository.CommentRepository
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
 import com.biteSized.bitesizedv4.service.CommentService
+import com.biteSized.bitesizedv4.service.TokenService
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -19,7 +20,7 @@ import java.util.*
 @RestController
 @RequestMapping("/comment")
 @CrossOrigin(origins = arrayOf("http://localhost:5173"))
-class CommentController(private val commentService: CommentService, @Autowired private val storyRepository: StoryRepository, @Autowired private val commentRepository: CommentRepository, @Autowired private val jwtUtil: JwtUtil) {
+class CommentController(private val commentService: CommentService, private val tokenService: TokenService) {
     @PostMapping("/{parentCommentId}/replies")
     fun createReply(
         @RequestHeader("Authorization") authorizationHeader: String,
@@ -45,7 +46,8 @@ class CommentController(private val commentService: CommentService, @Autowired p
     @PutMapping("/{commentId}/upvote")
     fun commentUpvote(@PathVariable commentId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UpvoteResponse>{
-        val upvoteResponse = commentService.commentUpvote(commentId)
+        val userId = tokenService.getUserId(authorizationHeader).toLong()
+        val upvoteResponse = commentService.commentUpvote(commentId, userId, authorizationHeader)
         return ResponseEntity(upvoteResponse, HttpStatus.OK)
     }
     @PutMapping("/{commentId}/downvote")

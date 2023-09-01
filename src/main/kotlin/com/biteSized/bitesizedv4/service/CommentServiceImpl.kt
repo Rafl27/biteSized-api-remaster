@@ -1,8 +1,11 @@
 package com.biteSized.bitesizedv4.service
 
 import com.biteSized.bitesizedv4.DTO.*
+import com.biteSized.bitesizedv4.enums.VoteType
+import com.biteSized.bitesizedv4.exception.AlreadyVotedException
 import com.biteSized.bitesizedv4.exception.NotFoundException
 import com.biteSized.bitesizedv4.model.Comment
+import com.biteSized.bitesizedv4.model.CommentVote
 import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.CommentRepository
 import com.biteSized.bitesizedv4.repository.StoryRepository
@@ -29,10 +32,18 @@ class CommentServiceImpl(
         }
     }
 
-    override fun commentUpvote(commentId: Long): UpvoteResponse {
+    override fun commentUpvote(commentId: Long, userId: Long, token: String): UpvoteResponse {
         val comment = commentRepository.findById(commentId)
+
         if (comment.isPresent) {
             val commentEntity = comment.get()
+
+            if (commentEntity.votes.any {it.user.id == userId}) {
+                throw AlreadyVotedException("You have already voted on this comment.")
+            }
+
+            val upvote = CommentVote(comment = commentEntity, user = tokenService.getUserTokenClaims(token), voteType = VoteType.UPVOTE)
+            commentEntity.votes.add(upvote)
             commentEntity.upvotes = (commentEntity.upvotes ?: 0) + 1
             commentRepository.save(commentEntity)
             return UpvoteResponse(id = commentId, upvote = commentEntity.upvotes)
