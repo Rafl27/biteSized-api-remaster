@@ -1,21 +1,18 @@
 package com.biteSized.bitesizedv4.controller
 
 import com.biteSized.bitesizedv4.DTO.*
-import com.biteSized.bitesizedv4.model.Comment
 import com.biteSized.bitesizedv4.model.Story
-import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.repository.UserRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
 import com.biteSized.bitesizedv4.service.StoryService
 import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.Authorization
+
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
+import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDate
-import java.util.*
+
 import java.util.logging.Logger
 
 @RestController
@@ -70,7 +67,9 @@ class StoryController(private val storyService : StoryService, @Autowired privat
 
     @GetMapping("/all")
     @ApiOperation(value = "Gets all the stories (no comments)")
-    fun allStories(): ResponseEntity<List<CompleteStoryNoComments>> {
-        return storyService.allStories()
+    fun allStories(@RequestParam(defaultValue = "0") page: Int,
+                   @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompleteStoryNoComments>> {
+        val storiesPage = storyService.allStories(page, size)
+        return ResponseEntity.ok(storiesPage)
     }
 }
