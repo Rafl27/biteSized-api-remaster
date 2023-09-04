@@ -2,6 +2,7 @@ package com.biteSized.bitesizedv4.service
 
 import com.biteSized.bitesizedv4.DTO.*
 import com.biteSized.bitesizedv4.model.Story
+import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 
 interface StoryService {
@@ -12,5 +13,5 @@ interface StoryService {
     fun updateStoryById (id: Long, updatedStory : Story) : ResponseEntity<Story>
     fun storyUpvote(storyId: Long, authorization: String) : ResponseEntity<UpvoteResponse>
     fun storyDownvote(storyId: Long, authorization: String) : ResponseEntity<DownvoteResponse>
-    fun allStories() : ResponseEntity<List<CompleteStoryNoComments>>
+    fun allStories(page: Int, size: Int) : Page<CompleteStoryNoComments>
 }

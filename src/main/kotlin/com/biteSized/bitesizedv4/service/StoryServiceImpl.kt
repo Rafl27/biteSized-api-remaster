@@ -5,6 +5,7 @@ import com.biteSized.bitesizedv4.controller.StoryController
 import com.biteSized.bitesizedv4.model.Story
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.repository.UserRepository
+import org.springframework.data.domain.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -103,21 +104,23 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         }
     }
 
-    override fun allStories(): ResponseEntity<List<CompleteStoryNoComments>> {
-            val queryResult = storyRepository.getStoryAndUserNoComment()
-            val storyAndUserNoCommentDTO = queryResult.map { story ->
-                CompleteStoryNoComments(
-                    story[0] as String,
-                    story[1] as String,
-                    story[2] as String,
-                    story[3] as Date,
-                    story[4] as Int,
-                    story[5] as Int,
-                    story[6] as String,
-                    story[7] as String,
-                    story[8] as Long,
-                )
-            }
-            return ResponseEntity.ok(storyAndUserNoCommentDTO)
+    override fun allStories(page: Int, size: Int): Page<CompleteStoryNoComments> {
+        val offset = page * size
+        val queryResult = storyRepository.getStoryAndUserNoComment(size, offset)
+        val storyAndUserNoCommentDTO = queryResult.map { story ->
+            CompleteStoryNoComments(
+                story[0] as String,
+                story[1] as String,
+                story[2] as String,
+                story[3] as Date,
+                story[4] as Int,
+                story[5] as Int,
+                story[6] as String,
+                story[7] as String,
+                story[8] as Long,
+            )
         }
+        val pageable: Pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("upvotes")))
+        return PageImpl(storyAndUserNoCommentDTO, pageable, storyAndUserNoCommentDTO.size.toLong());
+    }
     }
