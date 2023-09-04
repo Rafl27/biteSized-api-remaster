@@ -15,7 +15,9 @@ interface StoryRepository :JpaRepository<Story, Long> {
 
     @Query("SELECT profile_picture, username, art, date, downvotes, upvotes, title, content, story.id as storyId FROM bitesized.user\n" +
             "JOIN story ON story.user_id = user.id\n" +
-            "ORDER BY upvotes DESC", nativeQuery = true)
-    fun getStoryAndUserNoComment() : List<Array<Any>>
+            "ORDER BY upvotes DESC " +
+            "LIMIT :size OFFSET :offset ", nativeQuery = true)
+    fun getStoryAndUserNoComment(@Param("size") size: Int,
+                                 @Param("offset") offset: Int) : List<Array<Any>>
 
 }
