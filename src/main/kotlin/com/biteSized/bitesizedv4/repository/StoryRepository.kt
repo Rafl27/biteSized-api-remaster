@@ -20,4 +20,7 @@ interface StoryRepository :JpaRepository<Story, Long> {
     fun getStoryAndUserNoComment(@Param("size") size: Int,
                                  @Param("offset") offset: Int) : List<Array<Any>>
 
+    @Query("SELECT COUNT(id) as numberOfStories from story", nativeQuery = true)
+    fun getNumberOfStories() : Long
+
 }

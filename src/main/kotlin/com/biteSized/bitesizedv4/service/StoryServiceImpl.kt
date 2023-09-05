@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.logging.Logger
+import kotlin.math.ceil
 
 @Service
 class StoryServiceImpl (private val storyRepository: StoryRepository,
@@ -120,7 +121,8 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
                 story[8] as Long,
             )
         }
+        val totalItems = storyRepository.getNumberOfStories()
         val pageable: Pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("upvotes")))
-        return PageImpl(storyAndUserNoCommentDTO, pageable, storyAndUserNoCommentDTO.size.toLong());
+        return PageImpl(storyAndUserNoCommentDTO, pageable, totalItems);
     }
     }
