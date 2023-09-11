@@ -33,6 +33,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/comment/{storyId}").permitAll()
                         .requestMatchers("/comment/{commentId}/upvote").permitAll()
                         .requestMatchers("/comment/{commentId}/downvote").permitAll()
+                        .requestMatchers("/upload").permitAll()
                 ).csrf().disable();
         return http.build();
     }
