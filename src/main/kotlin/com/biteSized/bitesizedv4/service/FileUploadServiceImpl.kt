@@ -26,12 +26,16 @@ class FileUploadServiceImpl (@Value("\${file.upload.directory}") private val upl
             val allowedImageTypes = setOf("image/jpeg", "image/jpg", "image/png", "image/gif")
             val contentType = file.contentType
 
-            if (contentType != null && allowedImageTypes.contains(contentType.lowercase(Locale.getDefault()))) {
+            if (contentType != null && allowedImageTypes.contains(contentType.toLowerCase())) {
                 val destinationPath = Path.of(uploadDirectory, file.originalFilename!!)
 
-                Thumbnails.of(file.inputStream)
-                    .scale(0.5)
-                    .toFile(destinationPath.toFile())
+                if (!contentType.equals("image/gif", ignoreCase = true)) {
+                    Thumbnails.of(file.inputStream)
+                        .scale(0.5) // You can adjust the compression level as needed
+                        .toFile(destinationPath.toFile())
+                } else {
+                    Files.copy(file.inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING)
+                }
             } else {
                 throw IllegalArgumentException("Invalid file type. Only image files (JPEG, PNG, GIF) are allowed.")
             }
