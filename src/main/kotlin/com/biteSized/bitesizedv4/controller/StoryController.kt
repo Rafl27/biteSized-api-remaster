@@ -6,6 +6,7 @@ import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.repository.UserRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
 import com.biteSized.bitesizedv4.service.StoryService
+import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -71,5 +72,11 @@ class StoryController(private val storyService : StoryService, @Autowired privat
                    @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompleteStoryNoComments>> {
         val storiesPage = storyService.allStories(page, size)
         return ResponseEntity.ok(storiesPage)
+    }
+
+    @GetMapping("/{storyId}/total-up-down")
+    @ApiOperation("Total threads upvotes and downvotes for a certain story")
+    fun threadsTotalUpvoteDownvote(@PathVariable storyId: Long) : ResponseEntity<List<ThreadsTotalUpvoteDownvote>> {
+        return storyService.threadsTotalUpvoteDownvote(storyId)
     }
 }
