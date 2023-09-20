@@ -9,6 +9,7 @@ import org.springframework.data.domain.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import java.util.*
 import java.util.logging.Logger
 import kotlin.math.ceil
@@ -125,4 +126,17 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         val pageable: Pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("upvotes")))
         return PageImpl(storyAndUserNoCommentDTO, pageable, totalItems);
     }
+
+    override fun threadsTotalUpvoteDownvote(storyId: Long): ResponseEntity<List<ThreadsTotalUpvoteDownvote>> {
+        val queryResult = storyRepository.getThreadsTotalUpvotesDownvotes(storyId)
+        val threadsTotalUpvoteDownvote = queryResult.map { threadsTotalUpvoteDownvote ->
+            ThreadsTotalUpvoteDownvote(
+                threadsTotalUpvoteDownvote[0] as Long,
+                threadsTotalUpvoteDownvote[1] as BigDecimal,
+                threadsTotalUpvoteDownvote[2] as BigDecimal
+            )
+        }
+
+        return ResponseEntity(threadsTotalUpvoteDownvote, HttpStatus.OK)
     }
+}
