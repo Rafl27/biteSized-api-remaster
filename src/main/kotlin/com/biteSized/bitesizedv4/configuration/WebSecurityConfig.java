@@ -28,6 +28,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/comment/{parentCommentId}/replies").permitAll()
                         .requestMatchers("/story/{id}/upvote").permitAll()
                         .requestMatchers("/story/{id}/downvote").permitAll()
+                        .requestMatchers("/story/{storyId}/total-up-down").permitAll()
                         .requestMatchers("/story/{storyId}/completestory").permitAll()
                         .requestMatchers("/comment/{storyId}/allcomments").permitAll()
                         .requestMatchers("/comment/{storyId}").permitAll()
