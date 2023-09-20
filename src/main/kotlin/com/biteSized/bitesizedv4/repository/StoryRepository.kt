@@ -1,6 +1,6 @@
 package com.biteSized.bitesizedv4.repository
 
-import com.biteSized.bitesizedv4.DTO.CompleteStoryNoComments
+import com.biteSized.bitesizedv4.DTO.ThreadsTotalUpvoteDownvote
 import com.biteSized.bitesizedv4.model.Story
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -22,5 +22,10 @@ interface StoryRepository :JpaRepository<Story, Long> {
 
     @Query("SELECT COUNT(id) as numberOfStories from story", nativeQuery = true)
     fun getNumberOfStories() : Long
+
+    @Query(
+        value = "select story_id, sum(upvotes) as totalUpvotes, sum(downvotes) as totalDownvotes from comment where story_id = :storyId",
+        nativeQuery = true)
+    fun getThreadsTotalUpvotesDownvotes(@Param("storyId") storyId: Long) : List<Array<Any>>
 
 }
