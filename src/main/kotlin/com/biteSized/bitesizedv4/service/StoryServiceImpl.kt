@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.util.*
 import java.util.logging.Logger
 import kotlin.math.ceil
@@ -138,5 +139,17 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         }
 
         return ResponseEntity(threadsTotalUpvoteDownvote, HttpStatus.OK)
+    }
+
+    override fun totalComments(storyId: Long): ResponseEntity<List<TotalComments>> {
+        val queryResult = storyRepository.getTotalComments(storyId)
+        val totalComments = queryResult.map { totalComments ->
+            TotalComments(
+                totalComments[0] as Long,
+                totalComments[1] as Long,
+            )
+        }
+
+        return ResponseEntity(totalComments, HttpStatus.OK)
     }
 }
