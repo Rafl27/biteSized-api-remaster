@@ -79,4 +79,10 @@ class StoryController(private val storyService : StoryService, @Autowired privat
     fun threadsTotalUpvoteDownvote(@PathVariable storyId: Long) : ResponseEntity<List<ThreadsTotalUpvoteDownvote>> {
         return storyService.threadsTotalUpvoteDownvote(storyId)
     }
+
+    @GetMapping("/{storyId}/total-comments")
+    @ApiOperation("Total comments for a certain story")
+    fun totalComments(@PathVariable storyId: Long) : ResponseEntity<List<TotalComments>> {
+        return storyService.totalComments(storyId)
+    }
 }
