@@ -28,4 +28,6 @@ interface StoryRepository :JpaRepository<Story, Long> {
         nativeQuery = true)
     fun getThreadsTotalUpvotesDownvotes(@Param("storyId") storyId: Long) : List<Array<Any>>
 
+    @Query("SELECT COUNT(story_id) as totalComments, story_id as storyId from comment where story_id = :storyId", nativeQuery = true)
+    fun getTotalComments(@Param("storyId") storyId: Long): List<Array<Any>>
 }
