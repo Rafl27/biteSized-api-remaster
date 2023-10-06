@@ -145,8 +145,8 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         val queryResult = storyRepository.getTotalComments(storyId)
         val totalComments = queryResult.map { totalComments ->
             TotalComments(
-                totalComments[0] as Long,
-                totalComments[1] as Long,
+                    (totalComments[1] as? Long) ?: 0,
+                    (totalComments[0] as? Long) ?: 0,
             )
         }
 
