@@ -119,4 +119,16 @@ class UserServiceImpl(
         }
     }
 
+    override fun getBio(userId: Int): ResponseEntity<UserBio> {
+        val queryResult = userRepository.getUserBio(userId)
+
+        if(queryResult.isNotEmpty()){
+            val userBio = UserBio(
+                    userId, queryResult
+            )
+            return ResponseEntity.ok(userBio)
+        }
+        return ResponseEntity.notFound().build()
+    }
+
 }
