@@ -16,6 +16,9 @@ data class User(
     @Column(name = "email")
     val email : String,
 
+    @Column(name = "bio")
+    val bio : String,
+
     @Column(name = "password")
     var password: String? = null,
 
