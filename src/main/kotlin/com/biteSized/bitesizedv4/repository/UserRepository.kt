@@ -1,8 +1,10 @@
 package com.biteSized.bitesizedv4.repository
 
+import com.biteSized.bitesizedv4.DTO.Bio
 import com.biteSized.bitesizedv4.DTO.UserBasicInfo
 import com.biteSized.bitesizedv4.model.User
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
@@ -20,4 +22,9 @@ interface UserRepository : JpaRepository<User, Long> {
             "join user on comment.user_id = user.id\n" +
             "where user.id = :commentId", nativeQuery = true)
     fun getUserBasicInfoByCommentId(commentId: Int) : Array<String>
+    @Modifying
+    @Query("UPDATE user SET bio = :bio WHERE id = :userId", nativeQuery = true)
+    fun postUserBio(userId : Int, bio : String) : Int
+//    @Query()
+//    fun getUserBio(userId: Int) : String
 }
