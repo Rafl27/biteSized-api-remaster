@@ -25,6 +25,6 @@ interface UserRepository : JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE user SET bio = :bio WHERE id = :userId", nativeQuery = true)
     fun postUserBio(userId : Int, bio : String) : Int
-//    @Query()
-//    fun getUserBio(userId: Int) : String
+    @Query("SELECT bio FROM user WHERE id = :userId", nativeQuery = true)
+    fun getUserBio(userId: Int) : String
 }
