@@ -56,6 +56,7 @@ class UserServiceImpl(
             claims["id"] = user.id
             claims["username"] = user.username
             claims["profilePicture"] = user.profilePicture
+            claims["email"] = user.email
 
             val token = jwtUtil.generateToken(claims)
 
@@ -105,10 +106,10 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun createBio(userId: Int, bio: Bio): ResponseEntity<UserBio> {
+    override fun createBio(userId: Int, bio: Bio, authorizationHeader : String): ResponseEntity<UserBio> {
         val rowsUpdated = userRepository.postUserBio(userId, bio.bio)
-
-        return if (rowsUpdated > 0) {
+        val user = tokenService.getUserTokenClaims(authorizationHeader)
+        return if (rowsUpdated > 0  && userId == user.id.toInt()) {
             val userBio = UserBio(
                     userId,
                     bio.bio
