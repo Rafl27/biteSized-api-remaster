@@ -40,8 +40,8 @@ class UserController(@Autowired private val userRepository: UserRepository, @Aut
     }
 
     @PostMapping("/bio/{userId}")
-    fun createBio(@PathVariable userId : Int, @RequestBody bio : Bio) : ResponseEntity<UserBio>{
-        return userService.createBio(userId, bio)
+    fun createBio(@PathVariable userId : Int, @RequestBody bio : Bio, @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UserBio>{
+        return userService.createBio(userId, bio, authorizationHeader)
     }
 
     @GetMapping("/bio/{userId}")

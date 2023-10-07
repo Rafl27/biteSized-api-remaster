@@ -13,6 +13,6 @@ interface UserService {
     fun userInfo(authorizationHeader : String) : ResponseEntity<UserBasicInfo>
     fun userInfoBasedOnStoryId(storyId: Int) : ResponseEntity<UserBasicInfo>
     fun userInfoBasedOnCommentId(userId: Int) : ResponseEntity<UserBasicInfo>
-    fun createBio(userId : Int, bio: Bio) : ResponseEntity<UserBio>
+    fun createBio(userId : Int, bio: Bio, authorizationHeader : String) : ResponseEntity<UserBio>
     fun getBio(userId: Int) : ResponseEntity<UserBio>
 }
