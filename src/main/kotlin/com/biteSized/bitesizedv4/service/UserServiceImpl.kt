@@ -1,13 +1,16 @@
 package com.biteSized.bitesizedv4.service
 
+import com.biteSized.bitesizedv4.DTO.Bio
 import com.biteSized.bitesizedv4.DTO.LoginRequest
 import com.biteSized.bitesizedv4.DTO.UserBasicInfo
+import com.biteSized.bitesizedv4.DTO.UserBio
 import com.biteSized.bitesizedv4.controller.UserController
 import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.repository.UserRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
 import com.biteSized.bitesizedv4.util.StringArrayIntoDTO
+import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCrypt
@@ -99,6 +102,21 @@ class UserServiceImpl(
             return ResponseEntity.ok(stringArrayIntoDTO.userBasicInfo(queryResult))
         }
         return ResponseEntity.notFound().build()
+    }
+
+    @Transactional
+    override fun createBio(userId: Int, bio: Bio): ResponseEntity<UserBio> {
+        val rowsUpdated = userRepository.postUserBio(userId, bio.bio)
+
+        return if (rowsUpdated > 0) {
+            val userBio = UserBio(
+                    userId,
+                    bio.bio
+            )
+            ResponseEntity.ok(userBio)
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 
 }

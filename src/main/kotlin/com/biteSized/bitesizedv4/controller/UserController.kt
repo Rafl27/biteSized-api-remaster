@@ -1,7 +1,9 @@
 package com.biteSized.bitesizedv4.controller
 
+import com.biteSized.bitesizedv4.DTO.Bio
 import com.biteSized.bitesizedv4.DTO.LoginRequest
 import com.biteSized.bitesizedv4.DTO.UserBasicInfo
+import com.biteSized.bitesizedv4.DTO.UserBio
 import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.UserRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
@@ -35,5 +37,10 @@ class UserController(@Autowired private val userRepository: UserRepository, @Aut
     @GetMapping("/info/comment/{userId}")
     fun userInfoBasedOnCommentId(@PathVariable userId: Int) : ResponseEntity<UserBasicInfo>{
         return userService.userInfoBasedOnCommentId(userId)
+    }
+
+    @PostMapping("/bio/{userId}")
+    fun createBio(@PathVariable userId : Int, @RequestBody bio : Bio) : ResponseEntity<UserBio>{
+        return userService.createBio(userId, bio)
     }
 }
