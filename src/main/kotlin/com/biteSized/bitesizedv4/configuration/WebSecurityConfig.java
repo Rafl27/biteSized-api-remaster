@@ -20,31 +20,7 @@ public class WebSecurityConfig {
         corsConfiguration.addAllowedHeader("*");
         http.
                 cors(corsConfigurer -> corsConfigurer.configurationSource(request -> corsConfiguration))
-                .authorizeHttpRequests( (authorize) -> authorize
-                        .requestMatchers("/user").permitAll()
-                        .requestMatchers("/user/signup").permitAll()
-                        .requestMatchers("/user/info").permitAll()
-                        .requestMatchers("/user/bio/{userId}").permitAll()
-                        .requestMatchers("/user/info/story/{storyId}").permitAll()
-                        .requestMatchers("/user/info/comment/{commentId}").permitAll()
-                        .requestMatchers("/user/login").permitAll()
-                        .requestMatchers("/story").permitAll()
-                        .requestMatchers("/story/all").permitAll()
-                        .requestMatchers("/story/user").permitAll()
-                        .requestMatchers("/story/{id}").permitAll()
-                        .requestMatchers("/story/{id}/comments").permitAll()
-                        .requestMatchers("/comment/{parentCommentId}/replies").permitAll()
-                        .requestMatchers("/story/{id}/upvote").permitAll()
-                        .requestMatchers("/story/{id}/downvote").permitAll()
-                        .requestMatchers("/story/{storyId}/total-up-down").permitAll()
-                        .requestMatchers("/story/{storyId}/total-comments").permitAll()
-                        .requestMatchers("/story/{storyId}/completestory").permitAll()
-                        .requestMatchers("/comment/{storyId}/allcomments").permitAll()
-                        .requestMatchers("/comment/{storyId}").permitAll()
-                        .requestMatchers("/comment/{commentId}/upvote").permitAll()
-                        .requestMatchers("/comment/{commentId}/downvote").permitAll()
-                        .requestMatchers("/upload").permitAll()
-                ).csrf().disable();
+                .csrf().disable().authorizeRequests().anyRequest().permitAll();
         return http.build();
     }
 }
