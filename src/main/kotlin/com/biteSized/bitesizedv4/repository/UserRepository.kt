@@ -12,7 +12,7 @@ interface UserRepository : JpaRepository<User, Long> {
     fun findByUsernameAndPassword(username: String, password: String): User
     fun findByUsername(username: String): User
     fun findByEmail(email: String) : User
-    @Query("SELECT u.username, u.email, u.profilePicture FROM User u WHERE u.id = :userId")
+    @Query("SELECT u.username, u.email, u.profilePicture, u.id FROM User u WHERE u.id = :userId")
     fun getUserBasicInfoById(userId: Long): Array<String>
     @Query("SELECT username, email, profile_picture from story\n" +
             "join user on story.user_id = user.id\n" +
