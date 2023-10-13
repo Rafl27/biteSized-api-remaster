@@ -67,24 +67,31 @@ class UserServiceImpl(
         }
     }
 
-    override fun userInfo(authorizationHeader: String): ResponseEntity<UserBasicInfo> {
-        val userId = tokenService.getUserId(authorizationHeader)
-        val queryResult = userRepository.getUserBasicInfoById(userId.toLong())
+    override fun userInfo(authorizationHeader: String): ResponseEntity<Any> {
+        try {
+            val userId = tokenService.getUserId(authorizationHeader)
+            val queryResult = userRepository.getUserBasicInfoById(userId.toLong())
 
-        if (queryResult.isNotEmpty()) {
-            val resultString = queryResult[0]
-            val parts = resultString.split(",")
+            if (queryResult.isNotEmpty()) {
+                val resultString = queryResult[0]
+                val parts = resultString.split(",")
 
-            if (parts.size == 3) {
-                val username = parts[0]
-                val email = parts[1]
-                val profilePicture = parts[2]
-                val userBasicInfo = UserBasicInfo(username, email, profilePicture)
-                return ResponseEntity.ok(userBasicInfo)
+                if (parts.size >= 4) {
+                    val username = parts[0]
+                    val email = parts[1]
+                    val profilePicture = parts[2]
+                    val id = parts[3]
+                    val userBasicInfo = UserBasicInfo(username, email, profilePicture, id)
+                    return ResponseEntity.ok(userBasicInfo)
+                }
             }
-        }
 
-        return ResponseEntity.notFound().build()
+            return ResponseEntity.notFound().build()
+        } catch (e: Exception) {
+            val errorMessage = "An error occurred: ${e.message}"
+            println(errorMessage)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage)
+        }
     }
 
     override fun userInfoBasedOnStoryId(storyId: Int): ResponseEntity<UserBasicInfo> {

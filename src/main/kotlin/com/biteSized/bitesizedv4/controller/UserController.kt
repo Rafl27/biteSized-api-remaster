@@ -27,7 +27,7 @@ class UserController(@Autowired private val userRepository: UserRepository, @Aut
         return userService.login(loginRequest)
     }
     @GetMapping("/info")
-    fun userInfo(@RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UserBasicInfo>{
+    fun userInfo(@RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<Any>{
         return userService.userInfo(authorizationHeader)
     }
     @GetMapping("/info/story/{storyId}")

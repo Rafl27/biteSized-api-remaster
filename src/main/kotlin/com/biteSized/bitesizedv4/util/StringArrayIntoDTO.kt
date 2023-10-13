@@ -12,7 +12,8 @@ class StringArrayIntoDTO () {
         val username = parts[0]
         val email = parts[1]
         val profilePicture = parts[2]
+        val id = parts[3]
 
-        return UserBasicInfo(username, email, profilePicture)
+        return UserBasicInfo(username, email, profilePicture, id)
     }
 }
