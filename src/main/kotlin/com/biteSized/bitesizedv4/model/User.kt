@@ -17,7 +17,7 @@ data class User(
     val email : String,
 
     @Column(name = "bio")
-    val bio : String,
+    val bio : String = "",
 
     @Column(name = "password")
     var password: String? = null,
