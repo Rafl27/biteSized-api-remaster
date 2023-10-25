@@ -7,7 +7,7 @@ Bite Sized é muito mais do que apenas uma plataforma. É um mundo vibrante onde
 📖 Crie Histórias Épicas: Entre em um reino onde a criatividade não tem limites. Com o Bite Sized, você pode iniciar suas próprias jornadas literárias, dar vida a personagens fascinantes e conceber enredos emocionantes. Transforme suas ideias em narrativas interativas que capturarão a imaginação dos outros.
 
 🎨 Arte que Inspira: Nossa comunidade talentosa de artistas fornece a paleta visual para suas histórias. Você pode explorar e escolher entre uma vasta coleção de obras de arte impressionantes para ilustrar suas criações. Ou, se você for um artista, contribua com sua visão única para enriquecer as histórias dos outros.
-
+ 
 🌟 Descubra as Melhores Narrativas: Explore as histórias mais cativantes da comunidade. Classifique, comente e mergulhe em mundos criativos diferentes. Este é o lugar para encontrar inspiração, mergulhar em aventuras inesperadas e conhecer novos autores talentosos.
 
 🤝 Colaboração sem Fronteiras: O Bite Sized incentiva a colaboração. Convide outros escritores e artistas para se juntar a você na criação de histórias compartilhadas. Veja como suas ideias se entrelaçam com as deles, criando uma trama única e envolvente que só poderia ter nascido na nossa plataforma.
