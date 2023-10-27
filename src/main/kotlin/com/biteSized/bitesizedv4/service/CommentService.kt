@@ -10,4 +10,5 @@ interface CommentService {
     fun createComment(storyId: Long, commentRequest: CommentRequest, authorization: String) : ResponseEntity<CommentResponse>
     fun storyComments(storyId : Long) : ResponseEntity<List<StoryCommentsResponse>>
     fun createReply(parentCommentId : Long, replyRequest: CommentReplyRequest, authorization : String) : ResponseEntity<CommentResponse>
+    fun singleComment(commentId: Long) : ResponseEntity<List<StoryCommentsResponse>>
 }

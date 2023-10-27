@@ -1,20 +1,12 @@
 package com.biteSized.bitesizedv4.controller
 
 import com.biteSized.bitesizedv4.DTO.*
-import com.biteSized.bitesizedv4.model.Comment
-import com.biteSized.bitesizedv4.model.User
-import com.biteSized.bitesizedv4.repository.CommentRepository
-import com.biteSized.bitesizedv4.repository.StoryRepository
-import com.biteSized.bitesizedv4.security.JwtUtil
 import com.biteSized.bitesizedv4.service.CommentService
 import com.biteSized.bitesizedv4.service.TokenService
 import io.swagger.annotations.ApiOperation
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.sql.Timestamp
-import java.time.LocalDate
 import java.util.*
 
 @RestController
@@ -56,5 +48,11 @@ class CommentController(private val commentService: CommentService, private val 
                       @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
         val downVoteResponse = commentService.commentDownvote(commentId)
         return ResponseEntity(downVoteResponse, HttpStatus.OK)
+    }
+
+    @GetMapping("/{commentId}/single-thread")
+    @ApiOperation("Information about a single comment")
+    fun singleComment(@PathVariable commentId: Long): ResponseEntity<List<StoryCommentsResponse>> {
+        return commentService.singleComment(commentId)
     }
 }

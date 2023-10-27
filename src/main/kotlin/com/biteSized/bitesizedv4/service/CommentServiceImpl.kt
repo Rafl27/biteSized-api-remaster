@@ -6,7 +6,6 @@ import com.biteSized.bitesizedv4.exception.AlreadyVotedException
 import com.biteSized.bitesizedv4.exception.NotFoundException
 import com.biteSized.bitesizedv4.model.Comment
 import com.biteSized.bitesizedv4.model.CommentVote
-import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.CommentRepository
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import org.springframework.http.ResponseEntity
@@ -119,5 +118,26 @@ class CommentServiceImpl(
         } else {
             return ResponseEntity.notFound().build()
         }
+    }
+
+    override fun singleComment(commentId: Long): ResponseEntity<List<StoryCommentsResponse>> {
+        val queryResult = commentRepository.getSingleComment(commentId)
+        val response = queryResult.map { result ->
+            StoryCommentsResponse(
+                idStory = result[0] as Long,
+                idComment = result[1] as Long,
+                contentComment = result[2] as String,
+                artComment = result[3] as? String,
+                parentCommentId = result[4] as? Long,
+                dateComment = result[5] as Timestamp,
+                downvotesComment = result[6] as Int,
+                upvotesComment = result[7] as Int,
+                useridComment = result[8] as Long,
+                userProfilePic = result[9] as String,
+                userUsername = result[10] as String,
+                userEmail = result[11] as? String ?: ""
+            )
+        }
+        return ResponseEntity.ok(response)
     }
 }
