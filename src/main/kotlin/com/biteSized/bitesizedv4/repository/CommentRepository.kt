@@ -16,14 +16,14 @@ interface CommentRepository : JpaRepository<Comment, Long> {
     fun getSingleComment(@Param("commentId") commentId: Long) : List<Array<Any>>
 
     @Query("WITH RECURSIVE CommentHierarchy AS (\n" +
-            "    SELECT user.id as userId, email, profile_picture, username, comment.id as commentId, art,content, date, downvotes, upvotes, parent_id, story_id, user_id\n" +
+            "    SELECT user.id as userId, email, profile_picture, username, comment.id as commentId, art,content, date, downvotes, upvotes, parent_id, story_id\n" +
             "    FROM comment\n" +
             "    join user on comment.user_id = user.id\n" +
             "    WHERE comment.id = :commentId\n" +
             "\n" +
             "    UNION ALL\n" +
             "\n" +
-            "    SELECT u.id as userId, u.email, u.profile_picture, u.username, c.id as commentId, c.art, c.content, c.date, c.downvotes, c.upvotes, c.parent_id, c.story_id, c.user_id\n" +
+            "    SELECT u.id as userId, u.email, u.profile_picture, u.username, c.id as commentId, c.art, c.content, c.date, c.downvotes, c.upvotes, c.parent_id, c.story_id\n" +
             "    FROM comment c\n" +
             "        join user u on c.user_id = u.id\n" +
             "             JOIN CommentHierarchy ch ON c.parent_id = ch.commentId\n" +
