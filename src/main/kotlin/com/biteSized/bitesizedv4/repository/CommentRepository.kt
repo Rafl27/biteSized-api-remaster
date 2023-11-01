@@ -14,4 +14,20 @@ interface CommentRepository : JpaRepository<Comment, Long> {
             "FROM story JOIN comment ON story.id = comment.story_id JOIN user ON comment.user_id = user.id\n" +
             "WHERE comment.id = :commentId ORDER BY comment.upvotes DESC", nativeQuery = true)
     fun getSingleComment(@Param("commentId") commentId: Long) : List<Array<Any>>
+
+    @Query("WITH RECURSIVE CommentHierarchy AS (\n" +
+            "    SELECT user.id as userId, email, profile_picture, username, comment.id as commentId, art,content, date, downvotes, upvotes, parent_id, story_id\n" +
+            "    FROM comment\n" +
+            "    join user on comment.user_id = user.id\n" +
+            "    WHERE comment.id = :commentId\n" +
+            "\n" +
+            "    UNION ALL\n" +
+            "\n" +
+            "    SELECT u.id as userId, u.email, u.profile_picture, u.username, c.id as commentId, c.art, c.content, c.date, c.downvotes, c.upvotes, c.parent_id, c.story_id\n" +
+            "    FROM comment c\n" +
+            "        join user u on c.user_id = u.id\n" +
+            "             JOIN CommentHierarchy ch ON c.parent_id = ch.commentId\n" +
+            ")\n" +
+            "SELECT * FROM CommentHierarchy", nativeQuery = true)
+    fun threadSegmentation(@Param("commentId") commentId: Long) : List<Array<Any>>
 }
