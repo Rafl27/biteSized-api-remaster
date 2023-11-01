@@ -140,4 +140,25 @@ class CommentServiceImpl(
         }
         return ResponseEntity.ok(response)
     }
+
+    override fun getThreadSegmentation(commentId: Long): ResponseEntity<List<CommentThreadsUser>> {
+        val queryResult = commentRepository.threadSegmentation(commentId)
+        val response = queryResult.map {
+            result -> CommentThreadsUser(
+                userId = result[0] as Long,
+                email = result[1] as String,
+                profilePicture = result[2] as String,
+                username = result[3] as String,
+                commentId = result[4] as Long,
+                art = result[5] as? String,
+                content = result[6] as String,
+                date = result[7] as Timestamp,
+                downvotes = result[8] as Int,
+                upvotes = result[9] as Int,
+                parentId = result[10] as? Long,
+                storyId = result[11] as Long
+            )
+        }
+        return ResponseEntity.ok(response)
+    }
 }
