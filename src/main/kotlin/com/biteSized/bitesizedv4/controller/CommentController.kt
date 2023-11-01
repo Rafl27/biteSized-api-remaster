@@ -55,4 +55,10 @@ class CommentController(private val commentService: CommentService, private val 
     fun singleComment(@PathVariable commentId: Long): ResponseEntity<List<StoryCommentsResponse>> {
         return commentService.singleComment(commentId)
     }
+
+    @GetMapping("/{commentId}/more-threads")
+    @ApiOperation("Gets all the response threads for a certain thread")
+    fun moreThreads(@PathVariable commentId: Long) : ResponseEntity<List<CommentThreadsUser>> {
+        return commentService.getThreadSegmentation(commentId)
+    }
 }
