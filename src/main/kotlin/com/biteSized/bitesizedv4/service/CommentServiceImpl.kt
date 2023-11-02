@@ -161,4 +161,9 @@ class CommentServiceImpl(
         }
         return ResponseEntity.ok(response)
     }
+
+    override fun getThreadSegmentationCount(commentId: Long): ResponseEntity<Int> {
+        val queryResult = commentRepository.threadSegmentationCount(commentId)
+        return ResponseEntity.ok(queryResult)
+    }
 }
