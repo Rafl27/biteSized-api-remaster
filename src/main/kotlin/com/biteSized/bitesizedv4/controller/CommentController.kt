@@ -61,4 +61,10 @@ class CommentController(private val commentService: CommentService, private val 
     fun moreThreads(@PathVariable commentId: Long) : ResponseEntity<List<CommentThreadsUser>> {
         return commentService.getThreadSegmentation(commentId)
     }
+
+    @GetMapping("/{commentId}/more-threads-count")
+    @ApiOperation("Gets the response threads count")
+    fun moreThreadsCount(@PathVariable commentId: Long) : ResponseEntity<Int> {
+        return commentService.getThreadSegmentationCount(commentId)
+    }
 }
