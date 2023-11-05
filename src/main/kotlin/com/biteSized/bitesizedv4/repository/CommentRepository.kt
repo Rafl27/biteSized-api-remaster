@@ -44,6 +44,6 @@ interface CommentRepository : JpaRepository<Comment, Long> {
             "        join user u on c.user_id = u.id\n" +
             "             JOIN CommentHierarchy ch ON c.parent_id = ch.commentId\n" +
             ")\n" +
-            "SELECT COUNT(*) FROM CommentHierarchy", nativeQuery = true)
+            "SELECT COUNT(*) - 1 FROM CommentHierarchy", nativeQuery = true)
     fun threadSegmentationCount(@Param("commentId") commentId: Long) : Int
 }
