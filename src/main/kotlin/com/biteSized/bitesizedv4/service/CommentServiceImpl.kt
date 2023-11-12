@@ -19,10 +19,17 @@ class CommentServiceImpl(
     private val storyRepository: StoryRepository,
     private val tokenService: TokenService
 ) : CommentService {
-    override fun commentDownvote(commentId: Long): DownvoteResponse {
+    override fun commentDownvote(commentId: Long, userId: Long, token: String): DownvoteResponse {
         val comment = commentRepository.findById(commentId)
         if (comment.isPresent) {
             val commentEntity = comment.get()
+
+            if (commentEntity.votes.any {it.user.id == userId}) {
+                throw AlreadyVotedException("You have already voted on this comment.")
+            }
+
+            val downvote = CommentVote(comment = commentEntity, user = tokenService.getUserTokenClaims(token), voteType = VoteType.DOWNVOTE)
+            commentEntity.votes.add(downvote)
             commentEntity.downvotes = (commentEntity.downvotes ?: 0) + 1
             commentRepository.save(commentEntity)
             return DownvoteResponse(id = commentId, downvote = commentEntity.downvotes)
