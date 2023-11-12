@@ -46,7 +46,8 @@ class CommentController(private val commentService: CommentService, private val 
     @ApiOperation(value = "downvote stories")
     fun commentDownvote(@PathVariable commentId: Long,
                       @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
-        val downVoteResponse = commentService.commentDownvote(commentId)
+        val userId = tokenService.getUserId(authorizationHeader).toLong()
+        val downVoteResponse = commentService.commentDownvote(commentId, userId, authorizationHeader)
         return ResponseEntity(downVoteResponse, HttpStatus.OK)
     }
 
