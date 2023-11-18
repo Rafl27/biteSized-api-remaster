@@ -13,5 +13,6 @@ data class CompleteStoryNoComments(
     val upvotes : Int?,
     val title : String,
     val content : String,
-    val storyId : Long
+    val storyId : Long,
+    val language : String?
 )

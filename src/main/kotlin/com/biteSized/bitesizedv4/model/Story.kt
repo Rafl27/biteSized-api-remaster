@@ -33,6 +33,8 @@ import java.util.*
         var downvotes: Int? = 0,
 
         @Column(name = "art", length = 5000)
-        val art: String = ""
+        val art: String = "",
 
+        @Column(name= "language")
+        var language: String = ""
     )
