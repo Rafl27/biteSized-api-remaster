@@ -1,7 +1,6 @@
 package com.biteSized.bitesizedv4.controller
 
 import com.biteSized.bitesizedv4.DTO.UserAllVotes
-import com.biteSized.bitesizedv4.service.CommentService
 import com.biteSized.bitesizedv4.service.CommentVote
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
