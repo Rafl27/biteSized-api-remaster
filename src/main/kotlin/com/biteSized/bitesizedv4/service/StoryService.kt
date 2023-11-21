@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 interface StoryService {
     fun createStory(newStory: Story, authorization: String): ResponseEntity<Story>
     fun getCurrentUserStories(authorization: String) : ResponseEntity<List<UserStories>>
+    fun getUserStories(userId: Long) : ResponseEntity<List<UserStories>>
     fun getStoryById(id : Long) : ResponseEntity<SingleStory>
     fun deleteStoryById(id : Long): ResponseEntity<String>
     fun updateStoryById (id: Long, updatedStory : Story) : ResponseEntity<Story>

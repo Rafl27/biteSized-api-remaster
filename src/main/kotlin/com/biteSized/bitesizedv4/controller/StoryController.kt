@@ -35,6 +35,11 @@ class StoryController(private val storyService : StoryService, @Autowired privat
         return storyService.getCurrentUserStories(authorizationHeader)
     }
 
+    @GetMapping("/{userId}/visit")
+    fun getUserStories(@PathVariable userId : Long) : ResponseEntity<List<UserStories>>{
+        return storyService.getUserStories(userId)
+    }
+
     @GetMapping("/{id}")
     fun getStoryById(@PathVariable id: Long): ResponseEntity<SingleStory> {
         return storyService.getStoryById(id)

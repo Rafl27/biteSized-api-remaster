@@ -67,10 +67,20 @@ class UserServiceImpl(
         }
     }
 
-    override fun userInfo(authorizationHeader: String): ResponseEntity<Any> {
+    override fun userInfo(authorizationHeader: String?, userId: Int?): ResponseEntity<Any> {
         try {
-            val userId = tokenService.getUserId(authorizationHeader)
-            val queryResult = userRepository.getUserBasicInfoById(userId.toLong())
+            var queryResult: Array<String> = emptyArray()
+            if(userId != null){
+                val queryResultById = userRepository.getUserBasicInfoById(userId.toLong())
+                queryResult = queryResultById
+            }
+            else{
+                val userId = authorizationHeader?.let { tokenService.getUserId(it) }
+                val queryResultByToken = userId?.let { userRepository.getUserBasicInfoById(it.toLong()) }
+                if (queryResultByToken != null) {
+                    queryResult = queryResultByToken
+                }
+            }
 
             if (queryResult.isNotEmpty()) {
                 val resultString = queryResult[0]

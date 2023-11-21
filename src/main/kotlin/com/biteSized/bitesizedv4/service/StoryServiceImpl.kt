@@ -44,7 +44,18 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         }
     }
 
-    //TODO make an endpoint to find all of the stories of a certain user (by the id)
+    override  fun getUserStories(userId: Long) : ResponseEntity<List<UserStories>>{
+        val user = userRepository.findById(userId)
+        if (user.isPresent){
+            val stories = user.get().stories.map { story ->
+                UserStories(story.id, story.title, story.content, story.upvotes, story.downvotes, story.art)
+            }
+            return ResponseEntity(stories, HttpStatus.OK)
+        } else {
+        return ResponseEntity(HttpStatus.NOT_FOUND)
+    }
+    }
+
 
     override fun getStoryById(id: Long): ResponseEntity<SingleStory> {
         val story = storyRepository.findById(id)
@@ -129,14 +140,15 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
             CompleteStoryNoComments(
                 story[0] as String,
                 story[1] as String,
-                story[2] as String,
-                story[3] as Date,
-                story[4] as Int,
+                    story[2] as Long,
+                story[3] as String,
+                story[4] as Date,
                 story[5] as Int,
-                story[6] as String,
+                story[6] as Int,
                 story[7] as String,
-                story[8] as Long,
-                    story[9] as String?
+                story[8] as String,
+                story[9] as Long,
+                    story[10] as String?
             )
         }
         val totalItems = storyRepository.getNumberOfStories()
