@@ -44,7 +44,18 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         }
     }
 
-    //TODO make an endpoint to find all of the stories of a certain user (by the id)
+    override  fun getUserStories(userId: Long) : ResponseEntity<List<UserStories>>{
+        val user = userRepository.findById(userId)
+        if (user.isPresent){
+            val stories = user.get().stories.map { story ->
+                UserStories(story.id, story.title, story.content, story.upvotes, story.downvotes, story.art)
+            }
+            return ResponseEntity(stories, HttpStatus.OK)
+        } else {
+        return ResponseEntity(HttpStatus.NOT_FOUND)
+    }
+    }
+
 
     override fun getStoryById(id: Long): ResponseEntity<SingleStory> {
         val story = storyRepository.findById(id)
