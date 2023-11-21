@@ -36,5 +36,8 @@ import java.util.*
         val art: String = "",
 
         @Column(name= "language")
-        var language: String = ""
+        var language: String = "",
+
+        @OneToMany(mappedBy = "story", cascade = [CascadeType.ALL], orphanRemoval = true)
+        var votes: MutableList<StoryVote> = mutableListOf()
     )

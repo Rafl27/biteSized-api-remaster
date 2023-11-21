@@ -6,7 +6,7 @@ import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.repository.UserRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
 import com.biteSized.bitesizedv4.service.StoryService
-import io.swagger.annotations.Api
+import com.biteSized.bitesizedv4.service.TokenService
 import io.swagger.annotations.ApiOperation
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +19,7 @@ import java.util.logging.Logger
 @RestController
 @RequestMapping("/story")
 @CrossOrigin(origins = arrayOf("http://localhost:5173"))
-class StoryController(private val storyService : StoryService, @Autowired private val storyRepository: StoryRepository, @Autowired private val jwtUtil: JwtUtil, @Autowired private val userRepository: UserRepository) {
+class StoryController(private val storyService : StoryService, @Autowired private val storyRepository: StoryRepository, @Autowired private val jwtUtil: JwtUtil, @Autowired private val userRepository: UserRepository, private val tokenService: TokenService) {
 
     private val logger: Logger = Logger.getLogger(StoryController::class.java.name)
     @PostMapping
@@ -57,13 +57,15 @@ class StoryController(private val storyService : StoryService, @Autowired privat
     @PutMapping("/{storyId}/upvote")
     fun storyUpvote(@PathVariable storyId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UpvoteResponse>{
-        return storyService.storyUpvote(storyId, authorizationHeader)
+        val userId = tokenService.getUserId(authorizationHeader).toLong()
+        return storyService.storyUpvote(storyId, userId, authorizationHeader)
 }
     @PutMapping("/{storyId}/downvote")
     @ApiOperation(value = "downvote stories")
     fun storyDownvote(@PathVariable storyId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
-        return storyService.storyDownvote(storyId, authorizationHeader)
+        val userId = tokenService.getUserId(authorizationHeader).toLong()
+        return storyService.storyDownvote(storyId, userId,  authorizationHeader)
     }
 
     @GetMapping("/all")
