@@ -102,10 +102,16 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         }
     }
 
-    override fun storyDownvote(storyId: Long, authorization: String): ResponseEntity<DownvoteResponse> {
+    override fun storyDownvote(storyId: Long, userId : Long, authorization: String): ResponseEntity<DownvoteResponse> {
         val story = storyRepository.findById(storyId)
         if (story.isPresent) {
             val storyEntity = story.get()
+
+            if (storyEntity.votes.any {it.user.id == userId})
+                throw AlreadyVotedException("You have already voted on this story.")
+
+            val downvote = StoryVote(story = storyEntity, user = tokenService.getUserTokenClaims(authorization), voteType = VoteType.DOWNVOTE)
+            storyEntity.votes.add(downvote)
             //?: elvis operator, if upvotes is null it returns 0
             storyEntity.downvotes = (storyEntity.downvotes ?: 0) + 1
             storyRepository.save(storyEntity)

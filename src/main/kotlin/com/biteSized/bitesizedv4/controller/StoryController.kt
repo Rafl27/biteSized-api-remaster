@@ -64,7 +64,8 @@ class StoryController(private val storyService : StoryService, @Autowired privat
     @ApiOperation(value = "downvote stories")
     fun storyDownvote(@PathVariable storyId: Long,
                     @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<DownvoteResponse>{
-        return storyService.storyDownvote(storyId, authorizationHeader)
+        val userId = tokenService.getUserId(authorizationHeader).toLong()
+        return storyService.storyDownvote(storyId, userId,  authorizationHeader)
     }
 
     @GetMapping("/all")

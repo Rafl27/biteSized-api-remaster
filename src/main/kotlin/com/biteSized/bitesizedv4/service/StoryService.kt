@@ -12,7 +12,7 @@ interface StoryService {
     fun deleteStoryById(id : Long): ResponseEntity<String>
     fun updateStoryById (id: Long, updatedStory : Story) : ResponseEntity<Story>
     fun storyUpvote(storyId: Long, userId : Long, authorization: String) : ResponseEntity<UpvoteResponse>
-    fun storyDownvote(storyId: Long, authorization: String) : ResponseEntity<DownvoteResponse>
+    fun storyDownvote(storyId: Long, userId : Long, authorization: String) : ResponseEntity<DownvoteResponse>
     fun allStories(page: Int, size: Int) : Page<CompleteStoryNoComments>
     fun threadsTotalUpvoteDownvote(storyId : Long) : ResponseEntity<List<ThreadsTotalUpvoteDownvote>>
     fun totalComments(storyId: Long) : ResponseEntity<List<TotalComments>>
