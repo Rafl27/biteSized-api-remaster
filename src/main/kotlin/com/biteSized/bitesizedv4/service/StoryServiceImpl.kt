@@ -2,7 +2,10 @@ package com.biteSized.bitesizedv4.service
 
 import com.biteSized.bitesizedv4.DTO.*
 import com.biteSized.bitesizedv4.controller.StoryController
+import com.biteSized.bitesizedv4.enums.VoteType
+import com.biteSized.bitesizedv4.exception.AlreadyVotedException
 import com.biteSized.bitesizedv4.model.Story
+import com.biteSized.bitesizedv4.model.StoryVote
 import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.repository.UserRepository
 import org.springframework.data.domain.*
@@ -79,10 +82,16 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         }
     }
 
-    override fun storyUpvote(storyId: Long, authorization: String): ResponseEntity<UpvoteResponse> {
+    override fun storyUpvote(storyId: Long, userId : Long, authorization: String): ResponseEntity<UpvoteResponse> {
         val story = storyRepository.findById(storyId)
         if (story.isPresent) {
             val storyEntity = story.get()
+
+            if (storyEntity.votes.any {it.user.id == userId})
+                throw AlreadyVotedException("You have already voted on this story.")
+
+            val upvote = StoryVote(story = storyEntity, user = tokenService.getUserTokenClaims(authorization), voteType = VoteType.UPVOTE)
+            storyEntity.votes.add(upvote)
             //?: elvis operator, if upvotes is null it returns 0
             storyEntity.upvotes = (storyEntity.upvotes ?: 0) + 1
             storyRepository.save(storyEntity)
