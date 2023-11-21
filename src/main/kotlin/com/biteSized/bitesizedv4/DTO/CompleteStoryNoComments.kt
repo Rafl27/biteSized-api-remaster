@@ -7,6 +7,7 @@ import java.util.*
 data class CompleteStoryNoComments(
     val profile_picture : String,
     val username : String,
+    val userId : Long,
     val art : String,
     val date : Date?,
     val downvotes : Int?,
