@@ -140,14 +140,15 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
             CompleteStoryNoComments(
                 story[0] as String,
                 story[1] as String,
-                story[2] as String,
-                story[3] as Date,
-                story[4] as Int,
+                    story[2] as Long,
+                story[3] as String,
+                story[4] as Date,
                 story[5] as Int,
-                story[6] as String,
+                story[6] as Int,
                 story[7] as String,
-                story[8] as Long,
-                    story[9] as String?
+                story[8] as String,
+                story[9] as Long,
+                    story[10] as String?
             )
         }
         val totalItems = storyRepository.getNumberOfStories()
