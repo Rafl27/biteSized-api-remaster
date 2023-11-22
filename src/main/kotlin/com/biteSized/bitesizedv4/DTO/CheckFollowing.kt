@@ -1,6 +1,8 @@
 package com.biteSized.bitesizedv4.DTO
 
 data class CheckFollowing(
-        val user : Long,
-        val follows : Long
+        val followingUserName : String,
+        val followingProfilePicture : String,
+        val followingId : Long,
+        val main_user : Long
 )
