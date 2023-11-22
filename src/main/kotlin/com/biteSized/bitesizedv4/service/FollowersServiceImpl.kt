@@ -21,5 +21,14 @@ class FollowersServiceImpl (private val followersRepository: FollowersRepository
 
     override fun unfollowUser(mainUserId: Long, follower: Long): ResponseEntity<UnfollowResponse> {
 
+        val existingFollower = followersRepository.findByMainUserAndFollower(mainUserId, follower)
+
+        return if (existingFollower.isPresent) {
+            followersRepository.delete(existingFollower.get())
+            logger.info("$follower just unfollowed $mainUserId")
+            ResponseEntity(UnfollowResponse(mainUserId, follower), HttpStatus.OK)
+        } else {
+            ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
     }
 }
