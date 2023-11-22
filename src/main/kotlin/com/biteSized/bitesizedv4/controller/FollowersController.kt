@@ -1,5 +1,6 @@
 package com.biteSized.bitesizedv4.controller
 
+import com.biteSized.bitesizedv4.DTO.CheckFollowers
 import com.biteSized.bitesizedv4.DTO.FollowerCount
 import com.biteSized.bitesizedv4.DTO.UnfollowResponse
 import com.biteSized.bitesizedv4.model.Followers
@@ -28,5 +29,10 @@ class FollowersController (private val followersService: FollowersService ,priva
     @GetMapping("{userId}/follower-count")
     fun followerCount(@PathVariable userId : Long) : ResponseEntity<FollowerCount>{
         return followersService.followerCount(userId)
+    }
+
+    @GetMapping("{userId}/check-followers")
+    fun checkFollowers(@PathVariable userId : Long) : ResponseEntity<List<CheckFollowers>>{
+        return followersService.checkFollowers(userId)
     }
 }
