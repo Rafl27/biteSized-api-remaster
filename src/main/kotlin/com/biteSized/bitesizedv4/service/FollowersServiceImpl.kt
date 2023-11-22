@@ -1,6 +1,7 @@
 package com.biteSized.bitesizedv4.service
 
 import com.biteSized.bitesizedv4.DTO.CheckFollowers
+import com.biteSized.bitesizedv4.DTO.CheckFollowing
 import com.biteSized.bitesizedv4.DTO.FollowerCount
 import com.biteSized.bitesizedv4.DTO.UnfollowResponse
 import com.biteSized.bitesizedv4.controller.StoryController
@@ -49,5 +50,16 @@ class FollowersServiceImpl (private val followersRepository: FollowersRepository
             )
         }
         return ResponseEntity(followers, HttpStatus.OK)
+    }
+
+    override fun checkFollowing(userId: Long): ResponseEntity<List<CheckFollowing>> {
+        val queryResult = followersRepository.checkFollowing(userId)
+        val following = queryResult.map { follows ->
+            CheckFollowing(
+                    follows[0] as Long,
+                    follows[1] as Long
+            )
+        }
+        return ResponseEntity(following, HttpStatus.OK)
     }
 }
