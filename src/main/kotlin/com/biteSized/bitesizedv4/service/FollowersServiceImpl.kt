@@ -1,4 +1,21 @@
 package com.biteSized.bitesizedv4.service
 
-class FollowersServiceImpl {
+import com.biteSized.bitesizedv4.DTO.FollowResponse
+import com.biteSized.bitesizedv4.controller.StoryController
+import com.biteSized.bitesizedv4.model.Followers
+import com.biteSized.bitesizedv4.repository.FollowersRepository
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Service
+import java.util.logging.Logger
+
+@Service
+class FollowersServiceImpl (private val followersRepository: FollowersRepository) : FollowersService {
+    private val logger: Logger = Logger.getLogger(StoryController::class.java.name)
+    override fun followUser(mainUserId: Long, follower: Long): ResponseEntity<Followers> {
+        val newFollower = Followers(mainUser = mainUserId, follower = follower)
+        val followDone = followersRepository.save(newFollower)
+        logger.info("$follower just followed $mainUserId")
+        return ResponseEntity(followDone, HttpStatus.OK)
+    }
 }
