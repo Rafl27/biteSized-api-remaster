@@ -5,12 +5,12 @@ import jakarta.persistence.*
 @Entity
 data class Followers(
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long? = null,
 
         @Column(name = "follower")
-        val follower : Int,
+        val follower : Long,
 
         @Column(name = "main_user")
-        val mainUser : Int
+        val mainUser : Long
 )
