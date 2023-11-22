@@ -1,6 +1,6 @@
 package com.biteSized.bitesizedv4.service
 
-import com.biteSized.bitesizedv4.DTO.FollowResponse
+import com.biteSized.bitesizedv4.DTO.UnfollowResponse
 import com.biteSized.bitesizedv4.controller.StoryController
 import com.biteSized.bitesizedv4.model.Followers
 import com.biteSized.bitesizedv4.repository.FollowersRepository
@@ -17,5 +17,9 @@ class FollowersServiceImpl (private val followersRepository: FollowersRepository
         val followDone = followersRepository.save(newFollower)
         logger.info("$follower just followed $mainUserId")
         return ResponseEntity(followDone, HttpStatus.OK)
+    }
+
+    override fun unfollowUser(mainUserId: Long, follower: Long): ResponseEntity<UnfollowResponse> {
+
     }
 }
