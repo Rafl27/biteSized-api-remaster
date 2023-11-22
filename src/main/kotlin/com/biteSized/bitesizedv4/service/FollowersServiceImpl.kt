@@ -62,4 +62,9 @@ class FollowersServiceImpl (private val followersRepository: FollowersRepository
         }
         return ResponseEntity(following, HttpStatus.OK)
     }
+
+    override fun followingCount(userId: Long): ResponseEntity<FollowerCount> {
+        val totalFollowing = FollowerCount(followersRepository.getFollowingCount(userId))
+        return ResponseEntity(totalFollowing, HttpStatus.OK)
+    }
 }

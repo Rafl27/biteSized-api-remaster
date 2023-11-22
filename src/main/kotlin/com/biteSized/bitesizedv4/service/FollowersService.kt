@@ -13,4 +13,5 @@ interface FollowersService {
     fun followerCount(userId : Long) : ResponseEntity<FollowerCount>
     fun checkFollowers(userId : Long) : ResponseEntity<List<CheckFollowers>>
     fun checkFollowing(userId : Long) : ResponseEntity<List<CheckFollowing>>
+    fun followingCount(userId : Long) : ResponseEntity<FollowerCount>
 }
