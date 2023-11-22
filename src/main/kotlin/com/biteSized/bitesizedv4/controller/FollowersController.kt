@@ -1,6 +1,6 @@
 package com.biteSized.bitesizedv4.controller
 
-import com.biteSized.bitesizedv4.DTO.FollowResponse
+import com.biteSized.bitesizedv4.DTO.UnfollowResponse
 import com.biteSized.bitesizedv4.model.Followers
 import com.biteSized.bitesizedv4.service.FollowersService
 import com.biteSized.bitesizedv4.service.TokenService
@@ -16,5 +16,11 @@ class FollowersController (private val followersService: FollowersService ,priva
     fun followUser(@PathVariable userId : Long, @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<Followers> {
         val follower = tokenService.getUserId(authorizationHeader).toLong()
         return followersService.followUser(userId, follower)
+    }
+
+    @PostMapping("{userId}/unfollow")
+    fun unfollowUser(@PathVariable userId : Long, @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<UnfollowResponse>{
+        val follower = tokenService.getUserId(authorizationHeader).toLong()
+        return followersService.unfollowUser(userId, follower)
     }
 }
