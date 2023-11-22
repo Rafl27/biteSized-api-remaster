@@ -1,7 +1,5 @@
 package com.biteSized.bitesizedv4.repository
 
-import com.biteSized.bitesizedv4.DTO.CheckFollowers
-import com.biteSized.bitesizedv4.DTO.FollowerCount
 import com.biteSized.bitesizedv4.model.Followers
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
