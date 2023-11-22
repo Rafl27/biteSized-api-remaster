@@ -1,10 +1,12 @@
 package com.biteSized.bitesizedv4.service
 
+import com.biteSized.bitesizedv4.DTO.CheckFollowers
 import com.biteSized.bitesizedv4.DTO.FollowerCount
 import com.biteSized.bitesizedv4.DTO.UnfollowResponse
 import com.biteSized.bitesizedv4.controller.StoryController
 import com.biteSized.bitesizedv4.model.Followers
 import com.biteSized.bitesizedv4.repository.FollowersRepository
+import org.hibernate.annotations.Check
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -36,5 +38,16 @@ class FollowersServiceImpl (private val followersRepository: FollowersRepository
     override fun followerCount(userId: Long) : ResponseEntity<FollowerCount> {
             val totalFollowers = FollowerCount(followersRepository.getFollowerCount(userId))
             return ResponseEntity(totalFollowers, HttpStatus.OK)
+    }
+
+    override fun checkFollowers(userId: Long): ResponseEntity<List<CheckFollowers>> {
+        val queryResult = followersRepository.checkFollowers(userId)
+        val followers = queryResult.map { follows ->
+            CheckFollowers(
+                    follows[0] as Long,
+                    follows[1] as Long
+            )
+        }
+        return ResponseEntity(followers, HttpStatus.OK)
     }
 }
