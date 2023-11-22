@@ -34,12 +34,7 @@ class FollowersServiceImpl (private val followersRepository: FollowersRepository
     }
 
     override fun followerCount(userId: Long) : ResponseEntity<FollowerCount> {
-        val existingMainUser = followersRepository.findByMainUser(userId)
-
-        return if (existingMainUser.isPresent){
-            ResponseEntity(FollowerCount(followersRepository.getFollowerCount(userId).followerCount), HttpStatus.OK)
-        }else {
-            ResponseEntity(HttpStatus.BAD_REQUEST)
-        }
+            val totalFollowers = FollowerCount(followersRepository.getFollowerCount(userId))
+            return ResponseEntity(totalFollowers, HttpStatus.OK)
     }
 }
