@@ -1,9 +1,6 @@
 package com.biteSized.bitesizedv4.controller
 
-import com.biteSized.bitesizedv4.DTO.Bio
-import com.biteSized.bitesizedv4.DTO.LoginRequest
-import com.biteSized.bitesizedv4.DTO.UserBasicInfo
-import com.biteSized.bitesizedv4.DTO.UserBio
+import com.biteSized.bitesizedv4.DTO.*
 import com.biteSized.bitesizedv4.model.User
 import com.biteSized.bitesizedv4.repository.UserRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
