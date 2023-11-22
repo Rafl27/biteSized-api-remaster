@@ -1,16 +1,20 @@
 package com.biteSized.bitesizedv4.controller
 
 import com.biteSized.bitesizedv4.DTO.FollowResponse
+import com.biteSized.bitesizedv4.model.Followers
+import com.biteSized.bitesizedv4.service.FollowersService
+import com.biteSized.bitesizedv4.service.TokenService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/followers")
 @CrossOrigin(origins = arrayOf("http://localhost:5173"))
-class FollowersController {
+class FollowersController (private val followersService: FollowersService ,private val tokenService: TokenService) {
 
     @PostMapping("{userId}/follow")
-    fun followUser(@PathVariable userId : Int, @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<List<FollowResponse>> {
-        return
+    fun followUser(@PathVariable userId : Long, @RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<Followers> {
+        val follower = tokenService.getUserId(authorizationHeader).toLong()
+        return followersService.followUser(userId, follower)
     }
 }
