@@ -58,8 +58,10 @@ class FollowersServiceImpl (private val followersRepository: FollowersRepository
         val queryResult = followersRepository.checkFollowing(userId)
         val following = queryResult.map { follows ->
             CheckFollowing(
-                    follows[0] as Long,
-                    follows[1] as Long
+                    followingUserName = follows[0] as String,
+                    followingProfilePicture = follows[1] as String,
+                    followingId = follows[2] as Long,
+                    main_user = follows[3] as Long
             )
         }
         return ResponseEntity(following, HttpStatus.OK)

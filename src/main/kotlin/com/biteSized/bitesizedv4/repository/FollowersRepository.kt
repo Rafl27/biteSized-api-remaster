@@ -22,6 +22,8 @@ interface FollowersRepository : JpaRepository<Followers, Long> {
             " WHERE main_user = :userId", nativeQuery = true)
     fun checkFollowers(@Param("userId") userId: Long) : List<Array<Any>>
 
-    @Query("SELECT follower, main_user FROM followers WHERE follower = :userId", nativeQuery = true)
+    @Query(" SELECT user.username, user.profile_picture, user.id, main_user FROM followers" +
+            " JOIN user ON followers.main_user = user.id" +
+            " WHERE follower = :userId", nativeQuery = true)
     fun checkFollowing(@Param("userId") userId: Long) : List<Array<Any>>
 }
