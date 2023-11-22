@@ -46,10 +46,10 @@ class StoryController(private val storyService : StoryService, @Autowired privat
     }
 
     //TODO: delete should work only if the tokens userId matches the storyUserId
-    @DeleteMapping("/{id}")
-    fun deleteStoryById(@PathVariable id: Long): ResponseEntity<String> {
-        return storyService.deleteStoryById(id)
-    }
+//    @DeleteMapping("/{id}")
+//    fun deleteStoryById(@PathVariable id: Long): ResponseEntity<String> {
+//        return storyService.deleteStoryById(id)
+//    }
 
     @PutMapping("/{id}")
     fun updateStoryById(
