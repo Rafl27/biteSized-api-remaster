@@ -1,5 +1,6 @@
 package com.biteSized.bitesizedv4.service
 
+import com.biteSized.bitesizedv4.DTO.FollowerCount
 import com.biteSized.bitesizedv4.DTO.UnfollowResponse
 import com.biteSized.bitesizedv4.controller.StoryController
 import com.biteSized.bitesizedv4.model.Followers
@@ -28,6 +29,16 @@ class FollowersServiceImpl (private val followersRepository: FollowersRepository
             logger.info("$follower just unfollowed $mainUserId")
             ResponseEntity(UnfollowResponse(mainUserId, follower), HttpStatus.OK)
         } else {
+            ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    override fun followerCount(userId: Long) : ResponseEntity<FollowerCount> {
+        val existingMainUser = followersRepository.findByMainUser(userId)
+
+        return if (existingMainUser.isPresent){
+            ResponseEntity(FollowerCount(followersRepository.getFollowerCount(userId).followerCount), HttpStatus.OK)
+        }else {
             ResponseEntity(HttpStatus.BAD_REQUEST)
         }
     }
