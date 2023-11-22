@@ -13,6 +13,8 @@ interface FollowersRepository : JpaRepository<Followers, Long> {
     fun findByMainUser(mainUser: Long) : Optional<Followers>
     @Query("SELECT COUNT(id) FROM followers WHERE main_user = :userId", nativeQuery = true)
     fun getFollowerCount(@Param("userId") userId : Long) : Long
+    @Query("SELECT COUNT(main_user) FROM followers WHERE follower = :userId", nativeQuery = true)
+    fun getFollowingCount(@Param("userId") userId : Long) : Long
 
     @Query("SELECT follower, main_user FROM followers WHERE main_user = :userId", nativeQuery = true)
     fun checkFollowers(@Param("userId") userId: Long) : List<Array<Any>>
