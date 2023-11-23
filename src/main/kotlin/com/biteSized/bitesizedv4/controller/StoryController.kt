@@ -31,12 +31,12 @@ class StoryController(private val storyService : StoryService, @Autowired privat
     }
 
     @GetMapping("/user")
-    fun getCurrentUserStories(@RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<List<UserStories>> {
+    fun getCurrentUserStories(@RequestHeader("Authorization") authorizationHeader: String): ResponseEntity<UserStoriesCountBundle> {
         return storyService.getCurrentUserStories(authorizationHeader)
     }
 
     @GetMapping("/{userId}/visit")
-    fun getUserStories(@PathVariable userId : Long) : ResponseEntity<List<UserStories>>{
+    fun getUserStories(@PathVariable userId : Long) : ResponseEntity<UserStoriesCountBundle>{
         return storyService.getUserStories(userId)
     }
 
