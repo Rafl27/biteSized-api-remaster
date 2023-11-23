@@ -32,25 +32,29 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         return ResponseEntity(createdStory, HttpStatus.CREATED)
     }
 
-    override fun getCurrentUserStories(authorization: String): ResponseEntity<List<UserStories>> {
+    override fun getCurrentUserStories(authorization: String): ResponseEntity<UserStoriesCountBundle> {
         val user = userRepository.findById(tokenService.getUserId(authorization).toLong())
         if (user.isPresent) {
             val stories = user.get().stories.map { story ->
                 UserStories(story.id, story.title, story.content, story.upvotes, story.downvotes, story.art)
             }
-            return ResponseEntity(stories, HttpStatus.OK)
+            val storyCount = stories.size
+            val response = UserStoriesCountBundle(storyCount, stories)
+            return ResponseEntity(response, HttpStatus.OK)
         } else {
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
 
-    override  fun getUserStories(userId: Long) : ResponseEntity<List<UserStories>>{
+    override  fun getUserStories(userId: Long) : ResponseEntity<UserStoriesCountBundle>{
         val user = userRepository.findById(userId)
         if (user.isPresent){
             val stories = user.get().stories.map { story ->
                 UserStories(story.id, story.title, story.content, story.upvotes, story.downvotes, story.art)
             }
-            return ResponseEntity(stories, HttpStatus.OK)
+            val storyCount = stories.size
+            val response = UserStoriesCountBundle(storyCount, stories)
+            return ResponseEntity(response, HttpStatus.OK)
         } else {
         return ResponseEntity(HttpStatus.NOT_FOUND)
     }
