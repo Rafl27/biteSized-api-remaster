@@ -42,6 +42,12 @@ class FollowersController (private val followersService: FollowersService ,priva
         return followersService.checkFollowing(userId)
     }
 
+    @GetMapping("/check-following-logged")
+    fun checkFollowingLoggedUser(@RequestHeader("Authorization") authorizationHeader: String) : ResponseEntity<List<CheckFollowing>>{
+        val user = tokenService.getUserId(authorizationHeader).toLong()
+        return followersService.checkFollowingLogged(user)
+    }
+
     @GetMapping("{userId}/following-count")
     fun followingCount(@PathVariable userId : Long) : ResponseEntity<FollowerCount>{
         return followersService.followingCount(userId)

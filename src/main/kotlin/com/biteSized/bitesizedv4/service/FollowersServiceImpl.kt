@@ -67,6 +67,19 @@ class FollowersServiceImpl (private val followersRepository: FollowersRepository
         return ResponseEntity(following, HttpStatus.OK)
     }
 
+    override fun checkFollowingLogged(userId: Long): ResponseEntity<List<CheckFollowing>> {
+        val queryResult = followersRepository.checkFollowing(userId)
+        val following = queryResult.map { follows ->
+            CheckFollowing(
+                    followingUserName = follows[0] as String,
+                    followingProfilePicture = follows[1] as String,
+                    followingId = follows[2] as Long,
+                    main_user = follows[3] as Long
+            )
+        }
+        return ResponseEntity(following, HttpStatus.OK)
+    }
+
     override fun followingCount(userId: Long): ResponseEntity<FollowerCount> {
         val totalFollowing = FollowerCount(followersRepository.getFollowingCount(userId))
         return ResponseEntity(totalFollowing, HttpStatus.OK)
