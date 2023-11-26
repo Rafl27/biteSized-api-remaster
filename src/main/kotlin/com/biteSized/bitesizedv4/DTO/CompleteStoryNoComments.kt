@@ -16,5 +16,5 @@ data class CompleteStoryNoComments(
     val content : String,
     val storyId : Long,
     val language : String?,
-    val followerCount: Int
+    val followerCount: Long
 )
