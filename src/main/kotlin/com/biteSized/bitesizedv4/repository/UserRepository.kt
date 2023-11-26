@@ -7,11 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.util.*
 
 interface UserRepository : JpaRepository<User, Long> {
     fun findByUsernameAndPassword(username: String, password: String): User
     fun findByUsername(username: String): User
     fun findByEmail(email: String) : User
+    fun existsByEmail(email: String) : Boolean
     @Query("SELECT u.username, u.email, u.profilePicture, u.id FROM User u WHERE u.id = :userId")
     fun getUserBasicInfoById(userId: Long): Array<String>
     @Query("SELECT username, email, profile_picture, user.id from story\n" +
