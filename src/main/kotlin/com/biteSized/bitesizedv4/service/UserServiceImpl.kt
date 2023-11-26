@@ -29,8 +29,8 @@ class UserServiceImpl(
     override fun createUser(newUser: User): ResponseEntity<User> {
 
         val existingUser = userRepository.existsByEmail(newUser.email)
+        // Email already exists
         if (existingUser) {
-            // Email already exists, throw an error or handle accordingly
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null)
         }else{
             val hashedPassword = BCrypt.hashpw(newUser.password, BCrypt.gensalt())
