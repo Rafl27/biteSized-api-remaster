@@ -152,7 +152,8 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
                 story[7] as String,
                 story[8] as String,
                 story[9] as Long,
-                    story[10] as String?
+                    story[10] as String?,
+                    story[11] as Long
             )
         }
         val totalItems = storyRepository.getNumberOfStories()
