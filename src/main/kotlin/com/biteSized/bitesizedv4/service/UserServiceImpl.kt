@@ -27,19 +27,28 @@ class UserServiceImpl(
 ) : UserService {
     private val logger: Logger = Logger.getLogger(UserController::class.java.name)
     override fun createUser(newUser: User): ResponseEntity<User> {
-        val hashedPassword = BCrypt.hashpw(newUser.password, BCrypt.gensalt())
-        newUser.password = hashedPassword
 
-        //generate bot avatar
-        if (newUser.profilePicture == "") {
-            val randomNumber = Random.nextInt(1, 5001)
-            val profilePictureUrl = "https://api.dicebear.com/6.x/bottts/svg?seed=$randomNumber"
-            newUser.profilePicture = profilePictureUrl
+        val existingUser = userRepository.existsByEmail(newUser.email)
+        // Email already exists
+        if (existingUser) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null)
+        }else{
+            val hashedPassword = BCrypt.hashpw(newUser.password, BCrypt.gensalt())
+            newUser.password = hashedPassword
+
+            //generate bot avatar
+            if (newUser.profilePicture == "") {
+                val randomNumber = Random.nextInt(1, 5001)
+                val profilePictureUrl = "https://api.dicebear.com/6.x/bottts/svg?seed=$randomNumber"
+                newUser.profilePicture = profilePictureUrl
+            }
+
+            val createdUser = userRepository.save(newUser)
+            logger.info("New user created: ${createdUser.username}")
+            return ResponseEntity(createdUser, HttpStatus.CREATED)
         }
 
-        val createdUser = userRepository.save(newUser)
-        logger.info("New user created: ${createdUser.username}")
-        return ResponseEntity(createdUser, HttpStatus.CREATED)
+
     }
 
     override fun login(loginRequest: LoginRequest): ResponseEntity<String> {
