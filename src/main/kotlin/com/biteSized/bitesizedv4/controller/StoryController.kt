@@ -81,6 +81,22 @@ class StoryController(private val storyService : StoryService, @Autowired privat
         return ResponseEntity.ok(storiesPage)
     }
 
+    @GetMapping("/all/top")
+    @ApiOperation(value = "Gets all the stories (no comments - filtered by upvotes)")
+    fun allStoriesUpvotes(@RequestParam(defaultValue = "0") page: Int,
+                   @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompleteStoryNoComments>> {
+        val storiesPage = storyService.allStories(page, size)
+        return ResponseEntity.ok(storiesPage)
+    }
+
+    @GetMapping("/all/newest")
+    @ApiOperation(value = "Gets all the stories (no comments)")
+    fun allStoriesNewest(@RequestParam(defaultValue = "0") page: Int,
+                   @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompleteStoryNoComments>> {
+        val storiesPage = storyService.allStories(page, size)
+        return ResponseEntity.ok(storiesPage)
+    }
+
     @GetMapping("/{storyId}/total-up-down")
     @ApiOperation("Total threads upvotes and downvotes for a certain story")
     fun threadsTotalUpvoteDownvote(@PathVariable storyId: Long) : ResponseEntity<List<ThreadsTotalUpvoteDownvote>> {
