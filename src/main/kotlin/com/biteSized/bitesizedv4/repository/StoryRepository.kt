@@ -20,6 +20,13 @@ interface StoryRepository :JpaRepository<Story, Long> {
     fun getStoryAndUserNoComment(@Param("size") size: Int,
                                  @Param("offset") offset: Int) : List<Array<Any>>
 
+    @Query("SELECT profile_picture, username, user_id,  art, date, downvotes, upvotes, title, content, story.id as storyId, language, (SELECT COUNT(id) FROM followers WHERE main_user = user.id) as follower_count  FROM user\n" +
+            "JOIN story ON story.user_id = user.id\n" +
+            "ORDER BY date DESC " +
+            "LIMIT :size OFFSET :offset ", nativeQuery = true)
+    fun getStoryAndUserNoCommentNewest(@Param("size") size: Int,
+                                 @Param("offset") offset: Int) : List<Array<Any>>
+
     @Query("SELECT COUNT(id) as numberOfStories from story", nativeQuery = true)
     fun getNumberOfStories() : Long
 
