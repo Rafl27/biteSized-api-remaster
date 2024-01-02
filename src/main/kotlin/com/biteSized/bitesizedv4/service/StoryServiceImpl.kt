@@ -185,6 +185,30 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
         return PageImpl(storyAndUserNoCommentDTO, pageable, totalItems);
     }
 
+    override fun allStoriesHot(page: Int, size: Int): Page<CompleteStoryNoComments> {
+        val offset = page * size
+        val queryResult = storyRepository.getStoryAndUserNoCommentHot(size, offset)
+        val storyAndUserNoCommentDTO = queryResult.map { story ->
+            CompleteStoryNoComments(
+                    story[0] as String,
+                    story[1] as String,
+                    story[2] as Long,
+                    story[3] as String,
+                    story[4] as Date,
+                    story[5] as Int,
+                    story[6] as Int,
+                    story[7] as String,
+                    story[8] as String,
+                    story[9] as Long,
+                    story[10] as String?,
+                    story[11] as Long
+            )
+        }
+        val totalItems = storyRepository.getNumberOfStories()
+        val pageable: Pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("upvotes")))
+        return PageImpl(storyAndUserNoCommentDTO, pageable, totalItems);
+    }
+
     override fun threadsTotalUpvoteDownvote(storyId: Long): ResponseEntity<List<ThreadsTotalUpvoteDownvote>> {
         val queryResult = storyRepository.getThreadsTotalUpvotesDownvotes(storyId)
         val threadsTotalUpvoteDownvote = queryResult.map { threadsTotalUpvoteDownvote ->

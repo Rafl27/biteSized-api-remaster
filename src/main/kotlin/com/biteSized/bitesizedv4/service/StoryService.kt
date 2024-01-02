@@ -15,8 +15,8 @@ interface StoryService {
     fun storyUpvote(storyId: Long, userId : Long, authorization: String) : ResponseEntity<UpvoteResponse>
     fun storyDownvote(storyId: Long, userId : Long, authorization: String) : ResponseEntity<DownvoteResponse>
     fun allStories(page: Int, size: Int) : Page<CompleteStoryNoComments>
-
     fun allStoriesNewest(page: Int, size: Int) : Page<CompleteStoryNoComments>
+    fun allStoriesHot(page: Int, size: Int) : Page<CompleteStoryNoComments>
     fun threadsTotalUpvoteDownvote(storyId : Long) : ResponseEntity<List<ThreadsTotalUpvoteDownvote>>
     fun totalComments(storyId: Long) : ResponseEntity<List<TotalComments>>
 }
