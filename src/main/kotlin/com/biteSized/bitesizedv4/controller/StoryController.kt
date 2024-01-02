@@ -90,10 +90,18 @@ class StoryController(private val storyService : StoryService, @Autowired privat
     }
 
     @GetMapping("/all/newest")
-    @ApiOperation(value = "Gets all the stories (no comments)")
+    @ApiOperation(value = "Gets all the stories (no comments - filtered by date)")
     fun allStoriesNewest(@RequestParam(defaultValue = "0") page: Int,
                    @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompleteStoryNoComments>> {
-        val storiesPage = storyService.allStories(page, size)
+        val storiesPage = storyService.allStoriesNewest(page, size)
+        return ResponseEntity.ok(storiesPage)
+    }
+
+    @GetMapping("/all/hot")
+    @ApiOperation(value = "Gets all the stories (no comments - filtered by comment count)")
+    fun allStoriesHot(@RequestParam(defaultValue = "0") page: Int,
+                         @RequestParam(defaultValue = "10") size: Int): ResponseEntity<Page<CompleteStoryNoComments>> {
+        val storiesPage = storyService.allStoriesHot(page, size)
         return ResponseEntity.ok(storiesPage)
     }
 
