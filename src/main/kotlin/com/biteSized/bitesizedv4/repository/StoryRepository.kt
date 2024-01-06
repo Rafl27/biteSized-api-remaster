@@ -20,6 +20,35 @@ interface StoryRepository :JpaRepository<Story, Long> {
     fun getStoryAndUserNoComment(@Param("size") size: Int,
                                  @Param("offset") offset: Int) : List<Array<Any>>
 
+    @Query("SELECT profile_picture, username, user_id,  art, date, downvotes, upvotes, title, content, story.id as storyId, language, (SELECT COUNT(id) FROM followers WHERE main_user = user.id) as follower_count  FROM user\n" +
+            "JOIN story ON story.user_id = user.id\n" +
+            "ORDER BY date DESC " +
+            "LIMIT :size OFFSET :offset ", nativeQuery = true)
+    fun getStoryAndUserNoCommentNewest(@Param("size") size: Int,
+                                 @Param("offset") offset: Int) : List<Array<Any>>
+
+    @Query("SELECT\n" +
+            "    u.profile_picture, u.username, u.id, s.art, s.date, s.downvotes, s.upvotes, s.title, s.content, s.id as storyId, s.language,\n" +
+            "    (SELECT COUNT(id) FROM followers WHERE main_user = u.id) as follower_count,\n" +
+            "    c.totalComments\n" +
+            "FROM\n" +
+            "    user u\n" +
+            "        JOIN\n" +
+            "    story s ON s.user_id = u.id\n" +
+            "        LEFT JOIN (\n" +
+            "        SELECT\n" +
+            "            COUNT(story_id) as totalComments, story_id\n" +
+            "        FROM\n" +
+            "            comment\n" +
+            "        GROUP BY\n" +
+            "            story_id\n" +
+            "    ) c ON c.story_id = s.id\n" +
+            "ORDER BY\n" +
+            "    c.totalComments DESC\n" +
+            "    LIMIT :size OFFSET :offset", nativeQuery = true)
+    fun getStoryAndUserNoCommentHot(@Param("size") size: Int,
+                                       @Param("offset") offset: Int) : List<Array<Any>>
+
     @Query("SELECT COUNT(id) as numberOfStories from story", nativeQuery = true)
     fun getNumberOfStories() : Long
 
