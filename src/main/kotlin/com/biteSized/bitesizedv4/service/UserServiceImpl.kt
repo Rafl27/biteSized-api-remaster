@@ -52,31 +52,27 @@ class UserServiceImpl(
     }
 
     override fun login(loginRequest: LoginRequest): ResponseEntity<String> {
-        val email = loginRequest.email
-        val password = loginRequest.password
+        val (email, password) = loginRequest
 
-        val user: User? = userRepository.findByEmail(email)
+        val user = userRepository.findByEmail(email)
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.")
 
-        if (user != null) {
-            if (BCrypt.checkpw(password, user.password)) {
-                logger.info("User logged in: $email")
-
-                // Create claims for the JWT token
-                val claims = HashMap<String, Any>()
-                claims["id"] = user.id
-                claims["username"] = user.username
-                claims["profilePicture"] = user.profilePicture
-                claims["email"] = user.email
-
-                val token = jwtUtil.generateToken(claims)
-
-                return ResponseEntity.ok(token)
-            } else {
-                logger.warning("Failed login attempt for user: $email")
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.")
-            }
+        if (!BCrypt.checkpw(password, user.password)) {
+            logger.warning("Failed login attempt for user: $email")
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.")
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.")
+
+        val claims = mapOf(
+            "id" to user.id,
+            "username" to user.username,
+            "profilePicture" to user.profilePicture,
+            "email" to user.email
+        )
+
+        val token = jwtUtil.generateToken(claims)
+
+        logger.info("User logged in: $email")
+        return ResponseEntity.ok(token)
     }
 
     override fun userInfo(authorizationHeader: String?, userId: Int?): ResponseEntity<Any> {
