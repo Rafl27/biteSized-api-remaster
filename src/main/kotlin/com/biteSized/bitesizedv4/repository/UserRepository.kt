@@ -12,7 +12,7 @@ import java.util.*
 interface UserRepository : JpaRepository<User, Long> {
     fun findByUsernameAndPassword(username: String, password: String): User
     fun findByUsername(username: String): User
-    fun findByEmail(email: String) : User
+    fun findByEmail(email: String) : User?
     fun existsByEmail(email: String) : Boolean
     @Query("SELECT u.username, u.email, u.profilePicture, u.id FROM User u WHERE u.id = :userId")
     fun getUserBasicInfoById(userId: Long): Array<String>
