@@ -55,25 +55,28 @@ class UserServiceImpl(
         val email = loginRequest.email
         val password = loginRequest.password
 
-        val user: User = userRepository.findByEmail(email)
+        val user: User? = userRepository.findByEmail(email)
 
-        if (BCrypt.checkpw(password, user.password)) {
-            logger.info("User logged in: $email")
+        if (user != null) {
+            if (BCrypt.checkpw(password, user.password)) {
+                logger.info("User logged in: $email")
 
-            // Create claims for the JWT token
-            val claims = HashMap<String, Any>()
-            claims["id"] = user.id
-            claims["username"] = user.username
-            claims["profilePicture"] = user.profilePicture
-            claims["email"] = user.email
+                // Create claims for the JWT token
+                val claims = HashMap<String, Any>()
+                claims["id"] = user.id
+                claims["username"] = user.username
+                claims["profilePicture"] = user.profilePicture
+                claims["email"] = user.email
 
-            val token = jwtUtil.generateToken(claims)
+                val token = jwtUtil.generateToken(claims)
 
-            return ResponseEntity.ok(token)
-        } else {
-            logger.warning("Failed login attempt for user: $email")
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.")
+                return ResponseEntity.ok(token)
+            } else {
+                logger.warning("Failed login attempt for user: $email")
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.")
+            }
         }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.")
     }
 
     override fun userInfo(authorizationHeader: String?, userId: Int?): ResponseEntity<Any> {
