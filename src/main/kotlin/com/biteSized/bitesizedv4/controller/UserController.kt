@@ -49,4 +49,9 @@ class UserController(@Autowired private val userRepository: UserRepository, @Aut
     fun getBio(@PathVariable userId : Int) : ResponseEntity<UserBio>{
         return userService.getBio(userId)
     }
+
+    @GetMapping("/info/votes/{userId}")
+    fun getVotes(@PathVariable userId : Int) : ResponseEntity<UserTotalVotesDto>{
+        return userService.getTotalVotes(userId)
+    }
 }
