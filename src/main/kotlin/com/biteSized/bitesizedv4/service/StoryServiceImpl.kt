@@ -6,7 +6,9 @@ import com.biteSized.bitesizedv4.enums.VoteType
 import com.biteSized.bitesizedv4.exception.AlreadyVotedException
 import com.biteSized.bitesizedv4.model.Story
 import com.biteSized.bitesizedv4.model.StoryVote
+import com.biteSized.bitesizedv4.model.UserTotalVotes
 import com.biteSized.bitesizedv4.repository.StoryRepository
+import com.biteSized.bitesizedv4.repository.UserTotalVotesRepository
 import com.biteSized.bitesizedv4.repository.UserRepository
 import org.springframework.data.domain.*
 import org.springframework.http.HttpStatus
@@ -21,7 +23,8 @@ import kotlin.math.ceil
 @Service
 class StoryServiceImpl (private val storyRepository: StoryRepository,
                         private val tokenService: TokenService,
-                        private val userRepository: UserRepository
+                        private val userRepository: UserRepository,
+                        private val userTotalVotesRepository: UserTotalVotesRepository
 ) : StoryService{
     private val logger: Logger = Logger.getLogger(StoryController::class.java.name)
     override fun createStory(newStory: Story, authorization: String): ResponseEntity<Story> {
@@ -110,6 +113,12 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
             //?: elvis operator, if upvotes is null it returns 0
             storyEntity.upvotes = (storyEntity.upvotes ?: 0) + 1
             storyRepository.save(storyEntity)
+
+            val userTotalVotes = story.get().user?.let { userTotalVotesRepository.findByUserId(it.id) }
+                ?: UserTotalVotes(user = story.get().user, upvotes = 0, downvotes = 0)
+            userTotalVotes.upvotes = (userTotalVotes.upvotes ?: 0) + 1
+            userTotalVotesRepository.save(userTotalVotes)
+
             val upvoteResponse = UpvoteResponse(id = storyId, upvote = storyEntity.upvotes)
             return ResponseEntity(upvoteResponse, HttpStatus.OK)
         } else {
