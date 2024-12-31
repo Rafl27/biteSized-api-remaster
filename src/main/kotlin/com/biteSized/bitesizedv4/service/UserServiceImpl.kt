@@ -1,13 +1,10 @@
 package com.biteSized.bitesizedv4.service
 
-import com.biteSized.bitesizedv4.DTO.Bio
-import com.biteSized.bitesizedv4.DTO.LoginRequest
-import com.biteSized.bitesizedv4.DTO.UserBasicInfo
-import com.biteSized.bitesizedv4.DTO.UserBio
+import com.biteSized.bitesizedv4.DTO.*
 import com.biteSized.bitesizedv4.controller.UserController
 import com.biteSized.bitesizedv4.model.User
-import com.biteSized.bitesizedv4.repository.StoryRepository
 import com.biteSized.bitesizedv4.repository.UserRepository
+import com.biteSized.bitesizedv4.repository.UserTotalVotesRepository
 import com.biteSized.bitesizedv4.security.JwtUtil
 import com.biteSized.bitesizedv4.util.StringArrayIntoDTO
 import jakarta.transaction.Transactional
@@ -21,6 +18,7 @@ import kotlin.random.Random
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
+    private val userTotalVotesRepo: UserTotalVotesRepository,
     private val jwtUtil: JwtUtil,
     private val tokenService: TokenService,
     private val stringArrayIntoDTO: StringArrayIntoDTO
@@ -155,6 +153,23 @@ class UserServiceImpl(
             return ResponseEntity.ok(userBio)
         }
         return ResponseEntity.notFound().build()
+    }
+
+    override fun getTotalVotes (userId: Int) : ResponseEntity<UserTotalVotesDto> {
+        val userTotalVotesEntity = userTotalVotesRepo.findByUserId(userId.toLong())
+            ?: return ResponseEntity.notFound().build()
+
+        val userTotalVotesDto = userTotalVotesEntity.upvotes?.let {
+            userTotalVotesEntity.downvotes?.let { it1 ->
+                UserTotalVotesDto(
+                    userId = userId,
+                    upvotes = it,
+                    downvotes = it1
+                )
+            }
+        }
+
+        return ResponseEntity.ok(userTotalVotesDto)
     }
 
 }
