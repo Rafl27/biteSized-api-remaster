@@ -139,6 +139,12 @@ class StoryServiceImpl (private val storyRepository: StoryRepository,
             //?: elvis operator, if upvotes is null it returns 0
             storyEntity.downvotes = (storyEntity.downvotes ?: 0) + 1
             storyRepository.save(storyEntity)
+
+            val userTotalVotes = story.get().user?.let { userTotalVotesRepository.findByUserId(it.id) }
+                ?: UserTotalVotes(user = story.get().user, upvotes = 0, downvotes = 0)
+            userTotalVotes.downvotes = (userTotalVotes.downvotes ?: 0) + 1
+            userTotalVotesRepository.save(userTotalVotes)
+
             val downVoteResponse = DownvoteResponse(id = storyId, downvote = storyEntity.downvotes)
             return ResponseEntity(downVoteResponse, HttpStatus.OK)
         } else {
